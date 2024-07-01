@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Rating Added</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        p {
+            color: #555;
+        }
+
+        .signature {
+            margin-top: 20px;
+            font-style: italic;
+            color: #777;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <p><b>Dear <span th:text="${firstName}"></span>,</b></p>
+        <p>Your mentor has added a comment for one of your key results. Log in to view the details.</p>
+        <p>To log in, visit:<a th:href="@{http://localhost:8080/login}">http://localhost:8080/login</a></p>
+        
+        <p><b>Best regards,</b><br>MentorMate</p>
+    </div>
+</body>
+
+</html>

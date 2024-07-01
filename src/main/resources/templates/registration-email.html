@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Welcome to MentorMate!</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .msgContainer {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        #content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        p {
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="msgContainer">
+        <div id="content">
+            <p><b>Dear <span th:text="${firstName}"></span></b>,</p>
+            <p>Thank you for joining MentorMate! We're delighted to have you on board.</p>
+            <p>Feel free to log in at any time using your email and password.</p>
+            <p>To log in, visit:<a th:href="@{http://localhost:8080/login}">http://localhost:8080/login</a></p>
+            
+            <p><b>Best regards,</b></p>
+            <p>MentorMate</p>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+ 
+    <!-- Console appender for WARN level -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <!-- Include class, method, and line number -->
+            <pattern>
+            <!-- %d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %highlight(%-5level) %logger{36} - %cyan(%class.%method\(%line\)) - %msg%n -->
+            %d{yyyy-MM-dd HH:mm:ss} [%thread] %highlight(%-5level) %logger{36} - %cyan(%class.%method\(%line\)) - %msg%n
+            </pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <!-- Only logs with INFO level and higher will be printed to the console -->
+            <level>INFO</level>
+        </filter>
+    </appender>
+ 
+    <!-- Rolling file appender -->
+    <appender name="ROLLING_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/application.log</file>
+ 
+        <!-- Use both TimeBasedRollingPolicy and SizeAndTimeBasedRollingPolicy -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- Rollover daily at midnight -->
+            <fileNamePattern>logs/application-%d{yyyy-MM-dd}.log</fileNamePattern>
+        </rollingPolicy>
+ 
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- Creates a new file (ie Rollover) when the file size reaches 10MB -->
+            <maxFileSize>10MB</maxFileSize>
+            <!-- Keep 7 days of log files -->
+            <maxHistory>7</maxHistory>
+            <!-- File name pattern for archived files -->
+            <fileNamePattern>logs/application-%d{yyyy-MM-dd}-%i.log.gz</fileNamePattern>
+        </rollingPolicy>
+ 
+        <encoder>
+            <!-- Include class, method, and line number -->
+            <pattern>
+            	<!-- %d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %highlight(%-5level) %logger{36} - %cyan(%class.%method\(%line\)) - %msg%n -->
+            	%d{yyyy-MM-dd HH:mm:ss} [%thread] %highlight(%-5level) - %cyan(%class.%method\(%line\)) - %msg%n
+            </pattern>
+        </encoder>
+        <!-- No need for a ThresholdFilter for the file appender -->
+    </appender>
+ 
+    <!-- Root logger -->
+    <root level="info">
+        <appender-ref ref="CONSOLE" />
+    </root>
+ 
+    <logger name="com.mentormate.mentormate" level="debug">
+        <appender-ref ref="ROLLING_FILE" />
+    </logger>
+ 
+</configuration>

@@ -1,0 +1,282 @@
+@charset "ISO-8859-1";
+
+body {
+	font-family: 'Arial', sans-serif;
+	margin: 0;
+	padding: 0;
+	background-color: rgb(255, 128, 255, 0.1);
+	overflow: hidden;
+}
+
+.header {
+	background-color: rgb(0, 25, 51);
+	color: white;
+	padding: 10px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	height: 60px;
+}
+
+
+.left-section {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	margin-top: 1%;
+	margin-left: 5px;
+}
+
+.right-section {
+	display: flex;
+	align-items: center;
+}
+
+.logout {
+	background-color: rgb(0, 25, 51);
+	color: white;
+	border: 1px solid white;
+	border-radius: 10px;
+	padding: 5px 15px;
+	text-decoration: none;
+}
+
+.logout:hover {
+	background-color: rgb(0, 46, 91);
+	color: rgb(255, 255, 255);
+}
+
+.blur-background {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.5);
+	filter: blur(5px);
+	z-index: 0;
+}
+
+.user-mapping-modal {
+	display: none;
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	width: 500px;
+	height: 300px;
+	transform: translate(-50%, -50%);
+	z-index: 2;
+}
+
+.user-mapping-btn {
+	background-color: #229b8b;
+	border: none;
+	color: white;
+	padding: 8px 15px;
+	font-size: 16px;
+	border-radius: 8px;
+	float: right;
+	margin-right: 1%;
+	margin-bottom: 10px;
+
+}
+
+.user-mapping-btn:hover {
+	background-color: #2cc9b5;
+}
+
+.user-mapping-popup {
+	padding: 20px;
+	position: relative;
+	background-color: #e6f5cd;
+	margin: 15% auto;
+	border: 1px solid #888;
+	width: 80%;
+	border-radius: 20px;
+}
+
+.close {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	font-size: 20px;
+	color: #555;
+	cursor: pointer;
+}
+
+form {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+label {
+	margin-top: 10px;
+	margin-bottom: 5px;
+	font-weight: bold;
+}
+
+select {
+	width: 100%;
+	padding: 8px;
+	margin-bottom: 10px;
+	box-sizing: border-box;
+}
+
+#saveButton {
+	background-color: #04AA6D;
+	color: white;
+	padding: 8px 20px;
+	border: none;
+	border-radius: 8px;
+	cursor: pointer;
+}
+
+#saveButton:hover {
+	background-color: #045c3e;
+}
+
+.table-name {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 15px;
+}
+
+h4 {
+	padding: 30px;
+	color: #333;
+}
+
+.error-container {
+	height: 20px;
+	text-align: center;
+}
+
+.error-message {
+	color: red;
+	font-weight: 600;
+	font-size: large;
+}
+.success-message {
+	padding-top: 2px;
+	color: green;
+	font-weight: 600;
+	font-size: large;
+}
+
+.table-body {
+	border: 3px solid rgb(128, 128, 128);
+	border-radius: 5px;
+	margin: 0 auto;
+	background-color: rgb(212, 212, 212);
+	padding: 20px;
+	margin-left: 10px;
+	margin-right: 10px;
+	transition: margin-left 0.5s;
+	overflow-y: scroll;
+	max-height: calc(78vh);
+	margin-top: 1%;
+}
+
+table {
+	border-collapse: collapse;
+	border: 1px solid rgb(102, 102, 102);
+	border-radius: 5px;
+	width: 100%;
+	background-color: rgb(255, 255, 255);
+}
+
+th,
+td {
+	border: 2px solid rgb(211, 222, 213);
+	padding: 1%;
+	text-align: center;
+}
+
+tr {
+	height: 20px;
+	text-align: center;
+}
+
+.serialNo {
+	font-size: 20px;
+	max-width: 30 px;
+	text-align: center;
+	padding: 8px;
+}
+
+.textAlign {
+	display: flex;
+	flex-direction: column;
+
+}
+
+.textAlign p {
+	margin-bottom: 0;
+
+}
+
+.columnHeader {
+	width: 50%;
+	font-size: 20px;
+	text-align: center;
+}
+
+.footer {
+	text-align: center;
+	background-color: rgb(0, 25, 51);
+	color: rgb(207, 207, 207);
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+	height: 25px;
+	font-size: 14px;
+	padding-top: 3px;
+}
+
+#confirmationDialog {
+	display: none;
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	background-color: rgb(255, 255, 255);
+	padding: 2%;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+	z-index: 1000;
+	border-radius: 3%;
+	color: #111;
+}
+
+#confirmationDialog p {
+	margin-bottom: 15px;
+}
+
+#confirmationDialog button {
+	padding: 5px 15px;
+	margin-left: 15%;
+	border-radius: 10%;
+	cursor: pointer;
+}
+
+#confirmationDialog button.cancel,
+button.yes {
+	background-color: rgb(33, 33, 222);
+	color: rgb(255, 255, 255);
+	opacity: 95%;
+	transition: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+#confirmationDialog button.cancel:hover {
+	background-color: rgb(0, 128, 0);
+	opacity: 95%;
+	transition: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+#confirmationDialog button.yes:hover {
+	background-color: rgb(255, 0, 0);
+	opacity: 95%;
+	transition: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+

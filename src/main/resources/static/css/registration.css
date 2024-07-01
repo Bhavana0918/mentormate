@@ -1,0 +1,114 @@
+body {
+	margin: 0;
+	padding: 0;
+	font-family: Arial, Helvetica, sans-serif;
+	background-size: cover;
+	background-position: center;
+	height: 100vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-image: url('../css/background-final.jpg');
+}
+
+.registration {
+	width: 380px;
+	background: rgb(192, 192, 192, 0.8);
+	padding: 40px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+	border-radius: 8px;
+}
+
+.form-box {
+	text-align: center;
+}
+
+.input-group {
+	text-align: left;
+	position: relative;
+}
+
+.input-field {
+	width: 100%;
+	padding: 10px;
+	margin-bottom: 15px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	box-sizing: border-box;
+}
+
+.select-field {
+	width: 100%;
+	padding: 10px;
+	margin-bottom: 15px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	box-sizing: border-box;
+}
+
+#submitButton {
+	width: 100%;
+	padding: 10px;
+	color: #fff;
+	background: rgb(128, 0, 64, 0.5);
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+#submitButton:disabled {
+	background: #95a5a6;
+	cursor: not-allowed;
+}
+
+.message {
+	margin-bottom: 15px;
+	color: rgb(0, 128, 0);
+	font-weight: bold;
+}
+
+.alert {
+	background: #e74c3c;
+	color: #fff;
+	padding: 10px;
+	border-radius: 4px;
+	margin-bottom: 15px;
+}
+
+p {
+
+	color: rgb(0, 0, 0);
+	font-size: 15px;
+}
+
+a {
+	color: rgb(128, 0, 128);
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+.password-toggle {
+	position: absolute;
+	top: 50%;
+	right: 10px;
+	transform: translateY(-50%);
+	cursor: pointer;
+}
+
+.password-toggle i {
+	font-size: 18px;
+	color: #333;
+}
+
+.password-requirements {
+	color: red;
+}
+
+.validation-message {
+	color: red;
+	margin-top: 5px;
+	font-size: 15px;
+}

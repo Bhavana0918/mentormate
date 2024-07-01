@@ -1,0 +1,5 @@
+INSERT INTO roles VALUES (3,'MENTEE'),(4,'MENTEE'),(5,'MENTEE'),(2,'MENTOR'),(2,'MENTEE'),(9,'ADMIN'),(6,'MENTOR'),(7,'MENTEE'),(7,'MENTOR'),(8,'MENTOR'),(8,'MENTEE'),(10,'MENTEE'),(11,'MENTOR'),(11,'MENTEE'),(12,'MENTEE'),(1,'MENTEE'),(1,'MENTOR');
+
+INSERT INTO mentor_mentee_relationship (mentee_id,mentor_id) VALUES (1,2),(3,2),(4,2),(5,2),(7,6),(2,6),(12,6),(11,1);
+
+INSERT INTO objectives (user_id,objective_description) VALUES (1,'Share: Enhance Knowledge Sharing within Teams'),(1,'Care: Improve Employee Well-being and Satisfaction'),(1,'Dare: Embrace Emerging Technologies'),(3,'Share: Foster Cross-Team Collaboration '),(3,'Care: Strengthen Cybersecurity Measures '),(3,'Dare: Enhance Agile Development Practices '),(4,'Share: Enhance Knowledge Sharing within Teams '),(4,'Care: Strengthen Cybersecurity Measures '),(3,'objective 1'),(1,'Care: Strengthen Cybersecurity Measures '),(3,'Care: Strengthen Cybersecurity Measures Successfully '),(11,'Care: Strengthen Cybersecurity Measures Successfully '),(2,'Share: Enhance Knowledge Sharing within Teams '),(7,'Dare: Enhance Agile Development Practices ');

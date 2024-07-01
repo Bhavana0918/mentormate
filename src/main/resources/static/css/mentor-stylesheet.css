@@ -1,0 +1,657 @@
+@charset "ISO-8859-1";
+
+body {
+	font-family: Arial, Helvetica, sans-serif;
+	margin: 0;
+	padding: 0;
+	background-color: rgb(211, 222, 213);
+}
+
+.header {
+	background-color: rgb(0, 25, 51);
+	color: white;
+	padding: 10px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	height: 60px;
+}
+
+.left-section {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	margin-top: 15px;
+	margin-left: 5px;
+
+}
+
+.right-section {
+	display: flex;
+	align-items: center;
+}
+
+.dropdown-icon {
+	width: 40px;
+	height: 40px;
+	border-radius: 80%;
+	background-color: rgb(128, 159, 255);
+	color: white;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 18px;
+	cursor: pointer;
+	transition: 0.5s;
+}
+
+.dropdown-content {
+	display: none;
+	position: absolute;
+	background-color: #f9f9f9;
+	min-width: 170px;
+	box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+	z-index: 1;
+	margin-top: 10px;
+	right: -10px;
+	text-align: center;
+}
+
+.dropdown-content a {
+	color: black;
+	padding: 12px 16px;
+	text-decoration: none;
+	display: block;
+	border:  1px solid rgb(223 223 223);
+}
+
+.dropdown-content a:hover {
+	background-color: rgb(192, 192, 192);
+}
+
+
+.user-menu:hover .dropdown-content {
+	display: block;
+}
+
+.main-content {
+	display: flex;
+	flex: 1;
+	min-height: 87vh;
+}
+
+.mentees-list {
+	position: absolute;
+	top: 60px;
+	left: 0;
+	width: 220px;
+	height: 100vh;
+	padding: 0px 6px;
+	background-color: rgb(128, 159, 255);
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+.mentees-list ul {
+	list-style: none;
+	padding: 0;
+}
+
+.mentees-list li:hover,
+.mentees-list li:active {
+	border-radius: 10px;
+	background: #e0e0e058;
+}
+
+.mentees-list a {
+	color: rgb(255, 255, 255);
+	font-size: 16px;
+	text-decoration: none;
+	align-items: center;
+	padding: 10px;
+}
+
+.mentees-list a span {
+	padding-top: 5px;
+}
+
+.mentees-list a img {
+	margin-right: 0px;
+	border: 1px solid rgb(0, 0, 0);
+	border-radius: 50%;
+}
+.mentees-list h5 {
+	color: rgb(255, 255, 255);
+	font-weight:bold;
+	padding: 10px;
+	text-align: center;
+}
+.mentee-link {
+	text-decoration: none;
+	display: flex;
+	flex-direction: column;
+	margin: 5px;
+}
+
+.mentee-link img {
+	width: 50px;
+	height: 50px;
+	border-radius: 100%;
+	margin-right: 10px;
+}
+
+.mentee-details {
+	flex: 1;
+	padding: 10px;
+}
+
+.profile {
+	position: fixed;
+	z-index: 1;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	display: none;
+	background-color: rgb(0, 0, 0);
+	background-color: rgba(0, 0, 0, 0.4);
+}
+
+.profile-info {
+	padding: 20px;
+	position: relative;
+	background-color: #e6f5cd;
+	margin: 15% auto;
+	border: 1px solid #888;
+	width: 20%;
+	border-radius: 20px;
+}
+
+.rating-comment-popup {
+	padding: 20px;
+	position: relative;
+	background-color: #e6f5cd;
+	border: 1px solid #888;
+	border-radius: 20px;
+}
+
+.okr-popup {
+	padding: 20px;
+	position: relative;
+	background-color: #e6f5cd;
+	margin: 15% auto;
+	border: 1px solid #888;
+	width: 80%;
+	border-radius: 20px;
+}
+
+.profile-info img {
+	width: 100px;
+	height: 100px;
+	border-radius: 50%;
+	padding: 10px;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.close {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	content: 4px;
+}
+
+/*Main content*/
+.menteeInfo {
+	position: absolute;
+	top: 70px;
+	left: 220px;
+	width: -webkit-fill-available;
+}
+
+.menteeProfileCard {
+	background-color: rgb(247, 249, 247);
+	border: 1px solid rgb(213, 213, 213);
+	margin: 10px;
+	border-radius: 15px;
+	box-shadow: 1px 1px 10px 1px rgb(126, 158, 132);
+}
+
+.menteeProfileContent {
+	padding: 10px;
+	display: flex;
+	margin-left: 100px;
+}
+
+.menteeProfileContent img {
+	width: 80px;
+	height: 80px;
+	border: 1px solid #ccc;
+	border-radius: 10%;
+	margin: 10px 60px;
+}
+
+.menteeProfileContent span {
+	display: table-column;
+}
+
+.menteeName {
+	font-size: 22px;
+	margin-bottom: 0px;
+	font-weight: 600;
+}
+
+.menteeEmail {
+	font-size: 12px;
+	margin-bottom: 5px;
+}
+
+.menteeDesignation {
+	font-size: 14px;
+	margin-bottom: 5px;
+	margin-top: 5px;
+}
+
+.okrCard {
+	background-color: rgb(247, 249, 247);
+	border: 1px solid rgb(213, 213, 213);
+	margin: 10px;
+	border-radius: 15px;
+	box-shadow: 1px 1px 5px 1px rgb(126, 158, 132);
+}
+
+.footer {
+	text-align: center;
+	background-color: #001933;
+	color: rgb(207, 207, 207);
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+	height: 25px;
+	font-size: 14px;
+	padding-top: 3px;
+}
+
+
+.blur-background {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.5);
+	filter: blur(5px);
+	z-index: 0;
+}
+
+.okrs-modal {
+	display: none;
+	position: fixed;
+	top: 40%;
+	left: 50%;
+	width: 500px;
+	height: 300px;
+	transform: translate(-50%, -50%);
+	z-index: 2;
+}
+
+.okrs-form-group {
+	margin-bottom: 25px;
+}
+
+.okr-input {
+	width: 100%;
+}
+
+.okr-container {
+	width: 98%;
+	margin: 10px auto;
+	padding: 20px;
+	overflow-y: scroll;
+	overflow-x: hidden;
+	transition: margin-left 0.5s;
+	max-height: 450px;
+}
+
+.okr-table {
+	width: 100%;
+	border-collapse: collapse;
+	margin-top: 10px;
+	margin-bottom: 20px;
+	border: 1px solid rgb(177, 177, 177);
+	font-size: 16px;
+}
+
+.okr-table tr,
+td {
+	border: 1px solid rgb(177, 177, 177);
+	padding: 8px;
+	text-align: center;
+	word-wrap: break-word;
+}
+
+.okr-table td:nth-child(1) {
+	max-width: 10px;
+	min-width: 10px;
+	text-align: center;
+}
+
+.okr-table td:nth-child(2) {
+	max-width: 200px;
+	text-align: center;
+	min-width: 200px;
+}
+
+.okr-table td:nth-child(3) {
+	max-width: 60px;
+	min-width: 10px;
+	text-align: center;
+}
+
+.okr-table td:nth-child(4) {
+	max-width: 200px;
+	min-width: 100px;
+	text-align: center;
+}
+
+.header-row {
+	font-weight: 600;
+	font-size: 16px;
+}
+
+.mytextdiv {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	color: rgb(115, 115, 115);
+}
+
+.mytexttitle {
+	flex-grow: 0;
+	margin: 0px 20px;
+	font-size: 18px;
+}
+
+.divider {
+	flex-grow: 1;
+	height: 1px;
+	background-color: rgb(115, 115, 115);
+	margin-right: 20px;
+}
+
+#addOKRsBtn {
+	margin-right: 20px;
+}
+
+.okr-btn {
+	background-color: #04AA6D;
+	border: none;
+	color: white;
+	padding: 10px 20px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 16px;
+	cursor: pointer;
+	border-radius: 8px;
+}
+
+.objective {
+	font-size: 18px;
+	font-weight: 550;
+}
+
+.menteeAverageRating {
+	font-size: 14px;
+	margin: 0;
+	font-weight: 0;
+	color: green;
+}
+
+.okr-table td:nth-child(4) i {
+	margin-left: 10px;
+	margin-right: 0px;
+}
+
+
+.ratings-modal {
+	display: none;
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 60%;
+	max-width: 500px;
+	background-color: white;
+	box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
+	border: 2px solid #ccc;
+	border-radius: 20px;
+	padding: 20px;
+	z-index: 1000;
+}
+
+.comment-modal {
+	display: none;
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 60%;
+	max-width: 500px;
+	background-color: white;
+	box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
+	border: 2px solid #ccc;
+	border-radius: 20px;
+	padding: 20px;
+	z-index: 1000;
+}
+
+.ratings-modal h2 {
+	margin-bottom: 20px;
+	font-size: 20px;
+}
+
+.ratings-form-group {
+	margin-bottom: 20px;
+}
+
+.rating-label {
+	font-size: 16px;
+
+}
+
+.rating-input {
+	width: calc(100% - 16px);
+	padding: 8px;
+	font-size: 16px;
+	box-sizing: border-box;
+}
+
+.ratings-modal button {
+	font-size: 16px;
+	cursor: pointer;
+	border-radius: 12px;
+}
+
+.ratings-modal button:hover {
+	background-color: rgb(192, 192, 192);
+}
+
+
+.blur-background-rating {
+	display: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.3);
+	z-index: 999;
+}
+
+.comment-modal h2 {
+	margin-bottom: 20px;
+	font-size: 20px;
+}
+
+.comment-form-group {
+	margin-bottom: 20px;
+}
+
+.comment-label {
+	font-size: 16px;
+
+}
+
+.comment-input {
+	width: calc(100% - 16px);
+	padding: 8px;
+	font-size: 16px;
+	box-sizing: border-box;
+}
+
+.comment-modal button {
+	font-size: 16px;
+	cursor: pointer;
+	border-radius: 12px;
+}
+
+.comment-modal button:hover {
+	background-color: rgb(192, 192, 192);
+}
+
+
+.blur-background-comment {
+	display: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.3);
+	z-index: 999;
+}
+
+.add-comment-button {
+	margin-left: 60px;
+}
+
+.mentor-profile-content {
+	text-align: center;
+}
+
+i.fas.fa-pen-to-square.fa-sm.add-comment-button {
+	cursor: pointer;
+}
+
+i.fas.fa-pen-to-square.fa-sm.add-rating-button {
+	cursor: pointer;
+}
+
+.background-text {
+	z-index: -999;
+	text-align: center;
+	color: rgb(154 177 160);
+	margin: 100px 100px auto 500px;
+	padding: 10px;
+	font-weight: 700;
+	font-size: 20px;
+}
+
+.profileLetter {
+	height: 60px;
+	width: 60px;
+	box-sizing: border-box;
+	border-radius: 50%;
+	border: 2px solid white;
+	line-height: 50px;
+	text-align: center;
+	font-size: 24px;
+	margin: auto;
+}
+
+.profileLetterMenteeDetail {
+	height: 90px;
+	width: 90px;
+	box-sizing: border-box;
+	border-radius: 30%;
+	border: 2px solid black;
+	line-height: 85px;
+	text-align: center;
+	font-size: 35px;
+	margin-top: 10px;
+	margin-right: 40px;
+}
+
+.profileLetterMentorDetail {
+	height: 80px;
+	width: 80px;
+	box-sizing: border-box;
+	border-radius: 30%;
+	border: 2px solid black;
+	line-height: 70px;
+	text-align: center;
+	font-size: 35px;
+	margin-bottom: 10px;
+	margin-left: 90px;
+	padding: 5px;
+}
+
+.menteeInformation {
+	margin-left: 10px;
+}
+
+#confirmationDialog {
+	display: none;
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	background-color: rgb(255, 255, 255);
+	padding: 2%;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+	z-index: 1000;
+	border-radius: 3%;
+	color: #111;
+}
+
+#confirmationDialog p {
+	margin-bottom: 15px;
+}
+
+#confirmationDialog button {
+	padding: 5px 15px;
+	margin-left: 15%;
+	border-radius: 10%;
+	cursor: pointer;
+}
+
+#confirmationDialog button.cancel {
+	background-color: rgb(33, 33, 222);
+	color: rgb(255, 255, 255);
+	opacity: 95%;
+	transition: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+#confirmationDialog button.yes {
+	background-color: rgb(33, 33, 222);
+	color: rgb(255, 255, 255);
+	opacity: 95%;
+	transition: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+#confirmationDialog button.cancel:hover {
+	background-color: rgb(0, 128, 0);
+	opacity: 95%;
+	transition: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+#confirmationDialog button.yes:hover {
+	background-color: rgb(255, 0, 0);
+	opacity: 95%;
+	transition: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+

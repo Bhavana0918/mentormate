@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+	
+<head>
+    <meta charset="UTF-8"/>
+    <title>Objectives and Key Results Added</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        #email-container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        p {
+            margin-bottom: 15px;
+        }
+
+        p:last-child {
+            margin-bottom: 0;
+        }
+
+        .footer {
+            margin-top: 20px;
+            font-size: 0.8em;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div id="email-container">
+        <p>
+            <b>Dear [[${firstName}]],</b>
+        </p>
+        <p>
+            Your mentor has added new objectives and key results for you. Log in to view the details.
+        </p>
+        <p>To log in, visit:<a th:href="@{http://localhost:8080/login}">http://localhost:8080/login</a></p>
+        
+        <p class="footer">
+           <b>Best regards,</b> <br/>
+            MentorMate
+        </p>
+    </div>
+</body>
+</html>

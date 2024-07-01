@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+	<link rel="stylesheet" th:href="@{/css/mentor-stylesheet.css}" />
+	<link rel="icon" type="image/png" th:href="@{../css/mmLogo.png}"/>
+	<meta charset="ISO-8859-1">
+	<title>Mentor</title>
+</head>
+
+<body>
+	<!-- Mentor Dashboard Header Content -->
+	<header class="header">
+
+		<!-- Profile Section with Welcome Message -->
+		<div class="left-section">
+			<h5>Mentor Dashboard</h3>
+				<p>Welcome, <span th:text="${firstName}"></span>! </p>
+		</div>
+		<div class="right-section">
+			<div class="user-menu">
+				<div class="dropdown">
+					<div class="dropdown-icon" id="profileIcon"
+						th:text="${#strings.substring(firstName, 0, 1).toUpperCase()}" data-bs-toggle="modal"
+						data-bs-target="#myProfileModal"></div>
+					<div class="dropdown-content" id="profileDropdown">
+						<a href="#" id="profileBtn">My Profile</a>
+						<a th:if="${hasMenteeRole}" th:href="@{/mentee}" class="active">Mentee Dashboard</a>
+						<a onclick="confirmLogout()" class="active">Logout</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</header>
+
+      <div id="confirmationDialog">
+		    <p>Are you sure you want to logout?</p>
+		    <button class="yes" onclick="logoutConfirmed()">Yes</button>
+		    <button class="cancel" onclick="cancelLogout()">No</button>
+       </div>
+       <div id="blurBackgroundLogout" class="blur-background" style="display: none;"></div>
+
+	<!-- Main Content Section -->
+	<div class="main-content">
+		<div class="background-text">
+			<h5>Welcome to Mentor Dashboard! Please select a mentee to view more information</h5>
+		</div>
+		<!-- Mentees List -->
+		<div class="mentees-list">
+			<h5>My Mentees</h5>
+			<ul>
+				<!-- Loop through the mentees and display their names as links -->
+				<li th:each="mentee : ${mentees}">
+					<!-- Mentee Link with ID Data Attribute -->
+					<a href="#" class="mentee-link" th:data-menteeid="${mentee.id}">
+						<!-- Mentee Profile Picture -->
+						<span class="profileLetter" th:text="${mentee.firstName.charAt(0)}"></span>
+						<span th:text="${mentee.firstName + ' ' + mentee.lastName}"></span>
+					</a>
+				</li>
+			</ul>
+		</div>
+
+		<!-- Mentee Details Container Section -->
+		<div id="menteeDetailsContainer" class="mentee-details" style="display: none;">
+			<!-- Mentee Information Section -->
+			<div class="menteeInfo">
+				<div class="mytextdiv">
+					<div class="mytexttitle">
+						Mentee Information
+					</div>
+					<div class="divider"></div>
+				</div>
+				<div class="menteeProfileCard">
+					<div class="menteeProfileContent">
+						<!-- Mentee Profile Picture -->
+						<div class="menteeProfile profileLetterMenteeDetail" id="menteeProfile"></div>
+						<div class="menteeInformation">
+							<!-- Mentee Information Fields -->
+							<p class="menteeName" id="menteeName"></p>
+							<p class="menteeDesignation" id="menteeDesignation"></p>
+							<p class="menteeEmail" id="menteeEmail"></p>
+							<p class="menteeAverageRating" id="menteeAverageRating"
+								th:text="'Rating: ' + ${mentee.averageRating != null ? mentee.averageRating : 0.0}"></p>
+						</div>
+					</div>
+				</div>
+				<!--displaying OKRs-->
+				<div class="mytextdiv">
+					<div class="mytexttitle">
+						Objectives
+					</div>
+					<div class="divider"></div>
+					<!-- ADD OKRs Button -->
+					<button id="addOKRsBtn" class="okr-btn" onclick="openOKRsPopup()">ADD OKRs</button>
+				</div>
+				<div class="okrCard">
+					<div class="okr-container">
+						<div id="objectivesContainer"></div>
+						<div>
+							<!-- The Modal for Objectives and Key Results -->
+							<!-- ADD OKRs Popup -->
+							<div id="okrsModal" class="okrs-modal" style="display: none;">
+								<div class="okr-popup">
+									<button id="okrsModalCloseBtn" class="close btn btn-sm btn-light">&times;</button>
+
+									<h5>Add Objectives and Key-Results</h5>
+
+									<form th:action="@{/save}" method="post" onsubmit="disableSubmitButton()">
+										<div class="okrs-form-group">
+											<label class="okr-label" for="objective">Objective:</label>
+											<input type="text" id="objective" name="objective"
+												class="form-control okr-input" required>
+											<input type="hidden" name="menteeId" value="">
+										</div>
+										<div class="okrs-form-group">
+											<label class="okr-label" for="keyResult1">Key Result 1:</label>
+											<input type="text" id="keyResult1" name="keyResult1"
+												class="form-control okr-input" required>
+										</div>
+										<div class="okrs-form-group">
+											<label class="okr-label" for="keyResult2">Key Result 2:</label>
+											<input type="text" id="keyResult2" name="keyResult2"
+												class="form-control okr-input" required>
+										</div>
+										<button id="saveButton" type="submit" class="btn btn-success">Save Okrs</button>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div id="blurBackgroundOKRs" class="blur-background" style="display: none;"></div>
+
+
+			<!-- ADD Ratings Popup -->
+			<div id="ratingModal" class="ratings-modal" style="display: none;">
+				<div class="rating-comment-popup">
+					<!-- Close button for the popup -->
+					<button id="ratingModalCloseBtn" class="close btn btn-sm btn-light">&times;</button>
+					<h2>Add Rating</h2>
+					<form action="@{{/mentor/mentee/{keyResultId}/addratings}" method="post">
+						<div class="ratings-form-group">
+							<select id="ratingDropdown" name="ratingDropdown" class="form-select rating-input" required>
+								<option value=1>1</option>
+								<option value=2>2</option>
+								<option value=3>3</option>
+								<option value=4>4</option>
+								<option value=5>5</option>
+							</select>
+						</div>
+						<!-- Submit button for the rating -->
+						<button id="submitRatingBtn" type="button" class="btn btn-success">Save</button>
+					</form>
+				</div>
+			</div>
+
+			<div id="blurBackgroundRating" class="blur-background" style="display: none;"></div>
+			<div id="commentModal" class="comment-modal" style="display: none;">
+				<div class="rating-comment-popup">
+					<!-- Close button for the popup -->
+					<button id="commentModalCloseBtn" class="close btn btn-sm btn-light">&times;</button>
+					<h2>Add Comment</h2>
+					<form action="@{{/mentor/mentee/{keyResultId}/addcomment}" method="post">
+						<div class="comment-form-group">
+							<label class="comment-label" for="commentDropdown">Comment:</label>
+							<textarea id="commentDropdown" name="commentDropdown" class="form-control" cols="15"
+								rows="6" required>
+							</textarea>
+						</div>
+						<!-- Submit button for Comment -->
+						<button id="submitCommentBtn" type="button" class="btn btn-success">Submit Comment</button>
+					</form>
+				</div>
+			</div>
+			<div id="blurBackgroundComment" class="blur-background" style="display: none;"></div>
+		</div>
+
+		<div id="okrsModal" class="okrs-modal blur" style="display: none;">
+		</div>
+
+	</div>
+	</div>
+
+
+	<div id="myProfile" class="profile" th:each="mentor : ${mentor}">
+
+		<!-- Profile information -->
+		<div class="profile-info">
+
+			<!--close button-->
+			<button class="close btn btn-sm btn-light">&times;</button>
+			<div class="profileLetterMentorDetail" th:text="${mentor.firstName.charAt(0)}"></div>
+			<div class="mentor-profile-content">
+				<p class="menteeName" th:text=" ${mentor.firstName} + ' ' + ${mentor.lastName}"></p>
+				<p class="menteeDesignation" th:text="${mentor.designation}"></p>
+				<p class="menteeEmail" th:text="${mentor.email}"></p>
+			</div>
+		</div>
+	</div>
+
+	<!--Footer -->
+	<footer class="footer">
+		<p>2024 MentorMate</p>
+	</footer>
+
+	<script th:inline="javascript">
+		// Add click event listener to the close button (cross mark)
+		document.getElementById('okrsModalCloseBtn').addEventListener('click', closeOKRsPopup);
+		// Get the pop-up
+		var profile = document.getElementById("myProfile");
+		// Get the button that opens the pop-up
+		var btn = document.getElementById("profileBtn");
+		var span = document.getElementsByClassName("close")[0];
+		// Get the close button within the profile pop-up
+		var closeProfileBtn = profile.querySelector(".close");
+
+		// When the user clicks the button, open the pop-up
+		btn.onclick = function () {
+			profile.style.display = "block";
+		}
+
+		// Add click event listener to the close button
+		closeProfileBtn.addEventListener("click", function () {
+			profile.style.display = "none";
+		});
+
+		document.addEventListener("DOMContentLoaded", function () {
+			profile.style.display = "none";
+		});
+
+		document.querySelectorAll('.mentee-link').forEach(function (link) {
+			link.addEventListener('click', function (event) {
+				event.preventDefault();
+				var menteeId = link.getAttribute('data-menteeid');
+				const menteeIdField = document.querySelector('input[name="menteeId"]');
+				menteeIdField.value = menteeId;
+				// AJAX request to fetch mentee details
+				fetch('/mentor/mentee/' + menteeId)
+					.then(response => response.json())
+					.then(data => {
+						// Update the details container with mentee information
+						document.getElementById('menteeProfile').innerText = data.firstName.charAt(0);
+						document.getElementById('menteeName').innerText = data.firstName + " " + data.lastName;
+						document.getElementById('menteeEmail').innerText = data.email;
+						document.getElementById('menteeDesignation').innerText = data.designation;
+						document.getElementById('menteeAverageRating').innerText = 'Rating: ' + data.averageRating;
+						// Display the mentee details container
+						document.getElementById('menteeDetailsContainer').style.display = 'block';
+						const objectivesContainer = document.getElementById('objectivesContainer');
+						objectivesContainer.innerHTML = ''; // Clear previous objectives
+
+						data.objectives.forEach(okr => {
+							const objectiveElement = document.createElement('h5');
+							objectiveElement.textContent = `${okr.objective}`;
+							objectiveElement.classList.add('objective')
+							objectivesContainer.appendChild(objectiveElement);
+
+							const keyResultsTable = document.createElement('table');
+							keyResultsTable.classList.add('okr-table');
+
+							// Create the table header (same as mentee dashboard)
+							const headerRow = keyResultsTable.insertRow();
+							headerRow.classList.add('header-row');
+							headerRow.insertCell().textContent = 'Sl. No.';
+							headerRow.insertCell().textContent = 'Key-Result';
+							headerRow.insertCell().textContent = 'Status';
+							headerRow.insertCell().textContent = 'Comment';
+							headerRow.insertCell().textContent = 'Rating';
+
+							// Populate the table with key results (same as mentee dashboard)
+							let rowNum = 1;
+							okr.keyResults.forEach(keyResult => {
+								const row = keyResultsTable.insertRow();
+								row.classList.add('data-row');
+								row.insertCell().textContent = rowNum++;
+								row.insertCell().textContent = keyResult.keyResultDescription;
+
+								row.insertCell().textContent = keyResult.status;
+
+								const commentCell = row.insertCell();
+								commentCell.textContent = keyResult.comment;
+
+								// Create the "Add/Edit" button for Comment
+								const addCommentButton = document.createElement('i');
+								addCommentButton.className = 'fas fa-pen-to-square fa-sm';
+								addCommentButton.onclick = function () {
+									openCommentModal(menteeId, keyResult.id);
+								};
+								addCommentButton.setAttribute("data-keyresultid", keyResult.id);
+								addCommentButton.classList.add("add-comment-button");
+
+								// Append the button to the "Comment" cell
+								commentCell.appendChild(addCommentButton);
+
+								const ratingCell = row.insertCell();
+								ratingCell.textContent = keyResult.rating;
+
+								// Create the "Add/Edit" button for Rating
+								const addRatingButton = document.createElement('i');
+								addRatingButton.className = 'fas fa-pen-to-square fa-sm';
+								addRatingButton.onclick = function () {
+									openRatingModal(menteeId, keyResult.id);
+								};
+								addRatingButton.setAttribute("data-keyresultid", keyResult.id);
+								addRatingButton.classList.add("add-rating-button");
+
+								// Append the button to the "Rating" cell
+								ratingCell.appendChild(addRatingButton);
+							});
+
+							objectivesContainer.appendChild(keyResultsTable);
+						});
+					});
+			});
+		});
+
+
+		// Add event listener for handling "Add Rating" button clicks
+		document.getElementById('objectivesContainer').addEventListener('click', function (event) {
+
+			if (event.target.classList.contains('addRatingButton')) {
+				// Prompt the mentor for a rating
+				const rating = prompt('Enter a rating (1 to 5):');
+				if (rating >= 1 && rating <= 5) {
+					// AJAX request to submit the rating to the server
+					const keyResultId = document.querySelector('input[name="menteeId"]').value;
+					fetch('/mentor/mentee/' + keyResultId + '/addratings?keyResultId=' + keyResultId + '&rating=' + rating, {
+						method: 'POST'
+					})
+						.then(response => response.json())
+						.then(data => {
+
+						})
+						.catch(error => {
+							console.error('Error submitting rating:', error);
+						});
+				} else {
+					alert('Please enter a valid rating between 1 and 5.');
+				}
+			}
+			if (event.target.classList.contains('addCommentButton')) {
+				// Get the key result ID from the data attribute
+				// Prompt the mentor for a comment
+				const comment = prompt('Enter a comment:');
+				// AJAX request to submit the rating to the server
+				const keyResultId = document.querySelector('input[name="menteeId"]').value;
+				fetch('/mentor/mentee/' + keyResultId + '/addcomment?keyResultId=' + keyResultId + '&comment=' + comment, {
+					method: 'POST'
+				})
+					.then(response => response.json())
+					.then(data => {
+
+					})
+					.catch(error => {
+						console.error('Error submitting comment:', error);
+					});
+			}
+		});
+
+
+		function openRatingModal(menteeId, keyResultId) {
+			const addRatingButton = document.createElement('button');
+			addRatingButton.textContent = 'Add Rating';
+
+			document.getElementById('ratingModal').style.display = 'block';
+			document.getElementById('blurBackgroundRating').style.display = 'block';
+
+			window.addEventListener('click', function (event) {
+				if (event.target === document.getElementById('blurBackgroundRating')) {
+					closeRatingModal();
+				}
+			});
+
+			document.getElementById('submitRatingBtn').addEventListener('click', function () {
+				const rating = document.getElementById('ratingDropdown').value;
+				this.disabled = true;
+
+				if (rating >= 1 && rating <= 5) {
+					fetch('/mentor/mentee/' + keyResultId + '/addratings?keyResultId=' + keyResultId + '&rating=' + rating, {method: 'POST'})
+						.then(response => response.text())
+						.then(data => {
+							closeRatingModal();
+							window.location.reload(true);
+						})
+						.catch(error => {
+							console.error('Error submitting rating:', error);
+						});
+				} else {
+					alert('Please enter a valid rating between 1 and 5.');
+				}
+			});
+
+		}
+
+		function openCommentModal(menteeId, keyResultId) {
+			const addCommentButton = document.createElement('button');
+			addCommentButton.textContent = 'Add Comment';
+
+			document.getElementById('commentModal').style.display = 'block';
+			document.getElementById('blurBackgroundComment').style.display = 'block';
+
+			window.addEventListener('click', function (event) {
+				if (event.target === document.getElementById('blurBackgroundComment')) {
+					closeCommentModal();
+				}
+			});
+
+			document.getElementById('submitCommentBtn').addEventListener('click', function () {
+				const comment = document.getElementById('commentDropdown').value;
+				this.disabled = true;
+				fetch('/mentor/mentee/' + keyResultId + '/addcomment?keyResultId=' + keyResultId + '&comment=' + comment, {method: 'POST'})
+					.then(response => response.text())
+					.then(data => {
+						closeCommentModal();
+						window.location.reload(true);
+					})
+					.catch(error => {
+						console.error('Error submitting comment:', error);
+					});
+			});
+
+		}
+		function closeRatingModal() {
+			document.getElementById('ratingModal').style.display = 'none';
+			document.getElementById('blurBackgroundRating').style.display = 'none';
+		}
+		function closeCommentModal() {
+			document.getElementById('commentModal').style.display = 'none';
+			document.getElementById('blurBackgroundComment').style.display = 'none';
+		}
+		// Function to open the ADD Ratings popup
+		function openRatingsPopup() {
+			document.getElementById('ratingModal').style.display = 'block';
+			document.getElementById('blurBackgroundRating').style.display = 'block';
+
+			// Event listener to close the popup when clicking outside
+			window.addEventListener('click', function (event) {
+				if (event.target === document.getElementById('blurBackgroundRating')) {
+					closeRatingsPopup();
+				}
+			});
+		}
+		// Function to open the ADD COmment
+		function openCommentPopup() {
+			document.getElementById('commentModal').style.display = 'block';
+			document.getElementById('blurBackgroundComment').style.display = 'block';
+
+			// Event listener to close the popup when clicking outside
+			window.addEventListener('click', function (event) {
+				if (event.target === document.getElementById('blurBackgroundComment')) {
+					closeCommentPopup();
+				}
+			});
+		}
+
+		// Function to close the ADD Ratings popup
+		function closeRatingsPopup() {
+			document.getElementById('ratingModal').style.display = 'none';
+			document.getElementById('blurBackgroundRating').style.display = 'none';
+			document.getElementById('ratingDropdown').value = '1'; // Reset the dropdown to the default value
+		}
+		// Function to close the ADD Comments popup
+		function closeCommentPopup() {
+			document.getElementById('commentModal').style.display = 'none';
+			document.getElementById('blurBackgroundComment').style.display = 'none';
+			document.getElementById('commentDropdown').value = '1'; // Reset the dropdown to the default value
+		}
+		// Event listener to the close button (cross mark)
+		document.getElementById('ratingModalCloseBtn').addEventListener('click', closeRatingsPopup);
+		// Get the pop-up
+		var ratingPopup = document.getElementById("ratingModal");
+
+		document.getElementById('commentModalCloseBtn').addEventListener('click', closeCommentPopup);
+		var commentPopup = document.getElementById("commentModal");
+		// Function to open the ADD OKRs popup
+		function openOKRsPopup() {
+			document.getElementById('okrsModal').style.display = 'block';
+			document.getElementById('blurBackgroundOKRs').style.display = 'block';
+
+
+			// Add event listener to close the popup when clicking outside
+			window.addEventListener('click', function (event) {
+				if (event.target === document.getElementById('blurBackgroundOKRs')) {
+					closeOKRsPopup();
+				}
+			});
+		}
+
+		// Function to close the ADD OKRs popup
+		function closeOKRsPopup() {
+
+			document.getElementById('okrsModal').style.display = 'none';
+			document.getElementById('blurBackgroundOKRs').style.display = 'none';
+			document.getElementById('objective').value = '';
+			document.getElementById('keyResult1').value = '';
+			document.getElementById('keyResult2').value = '';
+		}
+		document.addEventListener('DOMContentLoaded', function () {
+			var profileIcon = document.getElementById('profileIcon');
+			var profileDropdown = document.getElementById('profileDropdown');
+
+			// Toggle dropdown visibility on button click and outside clicks
+			profileIcon.addEventListener('click', function (event) {
+				// Toggle the display of the dropdown menu
+				if (profileDropdown.style.display === 'block') {
+					profileDropdown.style.display = 'none';
+				} else {
+					profileDropdown.style.display = 'block';
+				}
+				event.stopPropagation();
+			});
+			// Close the dropdown when clicking outside of it
+			window.onclick = function (event) {
+				if (event.target !== profileIcon && event.target !== profileDropdown) {
+					profileDropdown.style.display = 'none';
+				}
+			};
+		});
+
+		function disableSubmitButton() {
+			// Disable the submit button to prevent multiple clicks
+			document.getElementById('saveButton').disabled = true;
+		}
+		
+		function confirmLogout() {
+			document.getElementById('confirmationDialog').style.display = 'block';
+			document.getElementById('blurBackgroundLogout').style.display = 'block';
+		}
+
+		function logoutConfirmed() {
+			window.location.href ='/logout';
+		}
+
+		function cancelLogout() {
+			document.getElementById('confirmationDialog').style.display = 'none';
+			document.getElementById('blurBackgroundLogout').style.display = 'none';
+		}
+
+	</script>
+	<script src="https://kit.fontawesome.com/867111397c.js" crossorigin="anonymous"></script>
+
+
+</body>
+
+</html>

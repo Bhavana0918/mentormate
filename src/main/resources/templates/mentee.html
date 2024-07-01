@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+	<link rel="stylesheet" th:href="@{/css/mentee-stylesheet.css}" />
+	<link rel="icon" type="image/png" th:href="@{../css/mmLogo.png}" />
+	<script src="https://kit.fontawesome.com/7d53697cb5.js" crossorigin="anonymous"></script>
+	<meta charset="ISO-8859-1">
+	<title>Mentee</title>
+</head>
+
+<body>
+
+	<div class="header">
+
+		<div class="left-section">
+
+			<h5>Mentee Dashboard</h5>
+			<p>Welcome, <span th:text="${firstName}" +' '+th:text="${lastName}"></span>!</p>
+			
+		</div>
+		
+		<div class="right-section">
+            <button id="openBtn" class="openbtn" onclick="toggleNav()"> &#9776;</button>
+            <div class="user-menu">
+                 <div class="dropdown">
+                      <div class="dropdown-icon" id="profileIcon" th:text="${#strings.substring(firstName, 0, 1).toUpperCase()}" data-bs-toggle="modal" data-bs-target="#myProfileModal"></div>
+                     	 <div class="dropdown-content" id="profileDropdown">
+                                <a href="#" id="profileBtn">My Profile</a>
+                                <a th:if="${hasMentorRole}" th:href="@{/mentor}">Mentor Dashboard</a>
+                                <a onclick="confirmLogout()" class="active">Logout</a>
+                    	 </div>
+                      </div>
+    			 </div>
+			 </div>
+		</div>
+		
+		<div id="confirmationDialog">
+		    <p>Are you sure you want to logout?</p>
+		    <button class="yes" onclick="logoutConfirmed()">Yes</button>
+		    <button class="cancel" onclick="cancelLogout()">No</button>
+       </div>
+       <div id="blurBackgroundLogout" class="blur-background" style="display: none;"></div>
+ 
+ 
+ 
+	    <div id="menteeProfile" class="profile">
+	     	<!--Profile information -->
+			 <div class="profile-info" style="padding: 10px; width: 20%;">
+			<!--close button-->
+				<button class="close btn btn-sm btn-light" >&times;</button>
+ 
+					<div class="mentor-profile-content">
+						<p class="profileLetterMenteeInfo" th:text="${mentee.firstName.charAt(0)}"></p>
+						<p class="menteeName" th:text=" ${mentee.firstName} +' '+ ${mentee.lastName}"></p>
+						<p class="menteeDesignation" th:text=" ${mentee.designation}"></p>
+						<p class="menteeEmail" th:text=" ${mentee.email}"></p>
+						<p  class="menteeAverageRating" th:text="' Rating: ' + ${mentee.averageRating != null ? mentee.averageRating : 0.0}"></p>
+					</div>
+			 </div>
+	    </div>
+ 
+ 
+		<div id="otherMenteeProfile" class="profile">
+		<!--Profile information -->
+			<div class="profile-info" style="padding: 10px; width: 20%;">
+			<!--close button-->
+				<button class="close btn btn-sm btn-light" onclick="closeOtherMenteeProfile()">&times;</button>
+			
+					<div class="mentor-profile-content">
+						<p class="menteeProfilePic profileLetterMenteeInfo" id="otherMenteeProfilePic"></p>
+						<p class="menteeName" id="otherMenteeName"></p>
+						<p class="menteeDesignation" id="otherMenteeDesignation"></p>
+						<p class="menteeEmail"id="otherMenteeEmail"></p>
+						<p  class="menteeAverageRating" id="otherMenteeAverageRating"></p>
+					</div>
+			</div>
+		</div>
+	
+	<!--mentor information-->
+	   <th:block th:if="${mentor != null}">
+			<div id="mentorProfile" class="profile">
+		<!--Profile information -->
+			   <div class="profile-info" style="padding: 10px; width: 20%;">
+			<!--close button-->
+				<button class="close btn btn-sm btn-light"
+				onclick="closeMentorProfile()">&times;</button>
+					<div class="mentor-profile-content">
+						<p class="profileLetterMenteeInfo" id="mentorName" th:text="${mentor.firstName.charAt(0)}"></p>
+						<p class="menteeName" id="mentorName" th:text="${mentor.firstName} + ' ' + ${mentor.lastName}"></p>
+						<p class="menteeDesignation" id="mentorDesignation" th:text="${mentor.designation}"></p>
+						<p class="menteeEmail"id="mentorEmail"  th:text="${mentor.email}"/></p>
+					</div>
+				</div>
+			</div>
+		</th:block>
+ 
+		<div id="mySidebar" class="sidebar">
+			<div class="mentor-list">
+				<h4>Your Mentor </h4>
+				<div th:if="${mentor == null}" class="no-mentor-message">
+	   			<p>No mentor assigned yet.</p>
+				</div>
+					<ul>
+						<th:block th:if="${mentor != null}">
+						<li th:each="mentor : ${mentor}">
+							<a href="#"  class="mentor-link" onclick="showMentorProfile()">
+								<!-- Mentor Profile Picture -->
+								<span class="profileLetterOtherMentee" th:text="${mentor.firstName.charAt(0)}"></span>
+								<span th:text="${mentor.firstName}+' '+${mentor.lastName}"></span>
+							</a>
+						</li>
+						</th:block>
+					</ul>
+			   </div>
+		<div class="mentees-list">
+			<h4>Other Mentees </h4>
+ 
+			<ul>
+				<!-- Loop through the mentees and display their names as links -->
+				<li th:each="eachMentee : ${listOfMentees}">
+					<!-- Mentee Link with ID Data Attribute -->
+					<a href="#" class="mentee-link" th:data-firstname="${eachMentee.firstName}"
+						th:data-lastname="${eachMentee.lastName}" th:data-email="${eachMentee.email}"
+						th:data-designation="${eachMentee.designation}"
+						th:data-averageRating="${eachMentee.averageRating}" onclick="showOtherMenteeProfile('${eachMentee.firstName}', '${eachMentee.lastName}' , '${eachMentee.email}'
+					, '${eachMentee.designation}' , '${eachMentee.averageRating}' )">
+					<!-- Mentee Profile Picture -->
+					<span class="profileLetterOtherMentee" th:text="${eachMentee.firstName.charAt(0)}"></span>
+					<span th:text="${eachMentee.firstName}+' '+${eachMentee.lastName}"></span>
+					</a>
+					</li>
+					</ul>
+		</div>
+	</div>
+
+	<div id="main">
+
+		<div class="okr-container">
+			<h4>Objectives:</h4>
+			<div class="okrClass">
+				<!-- Loop through the list of OKRs -->
+				<div th:each="eachOkr, iterStat : ${listOfOkrs}">
+					<h4>
+						<span th:text="${iterStat.index + 1}"></span>.
+						<span th:text="${eachOkr.objective}"></span>
+					</h4>
+					<table class="okr-table" aria-label="Key results table">
+						<thead>
+							<tr>
+								<th class="serialNo">Sl. No.</th>
+								<th class="keyResults">Key Results</th>
+								<th class="status">Status</thclass="serialNo">
+								<th class="comments">Comments</th>
+								<th class="ratings">Ratings</thclass="serialNo">
+							</tr>
+						</thead>
+						<tbody>
+							<!-- Loop through the key results -->
+							<!--displaying key-results, comments and ratings-->
+							<tr th:each="eachKey,keyStat : ${eachOkr.keyResults}">
+								<td class="serialNo" th:text="${keyStat.index + 1}"></td> <!-- Serial number -->
+								<td class="keyResults" th:text="${eachKey.keyResultDescription}"></td>
+								<!-- Key Results -->
+								<td>
+									<form id="updateStatusForm"
+										th:action="@{/updateKeyResultStatus/{keyResultId}(keyResultId=${eachKey.id})}"
+										method="post">
+										<select name="newStatus">
+											<option
+												th:each="status : ${T(com.mentormate.mentormate.entities.Status).values()}"
+												th:value="${status}" th:text="${status}"
+												th:selected="${eachKey.status != null && eachKey.status.name() == status.name()}">
+											</option>
+										</select>
+										<button type="submit" class="tick"><i class="fa-solid fa-check"></i></button>
+									</form>
+
+								</td>
+								<td class="comments" th:text="${eachKey.comment}"></td> <!-- Add comments data here -->
+								<td class="ratings" th:text="${eachKey.rating}"></td> <!-- Add ratings data here -->
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+
+	<!--Footer -->
+	<div class="footer">
+		<p>2024 MentorMate</p>
+	</div>
+	<script th:inline="javascript">
+		var menteeProfile = document.getElementById("menteeProfile");
+		var btn = document.getElementById("profileBtn");
+		var closeProfileBtn = menteeProfile.querySelector(".close");
+		var span = document.getElementsByClassName("close")[0];
+
+		// When the user clicks the button, open the pop-up
+		btn.onclick = function () {
+			menteeProfile.style.display = "block";
+		}
+		// Add click event listener to the close button
+		closeProfileBtn.addEventListener("click", function () {
+			menteeProfile.style.display = "none";
+		});
+
+		span.onclick = function () {
+			menteeProfile.style.display = "none";
+		}
+
+
+		function toggleNav() {
+			var sidebar = document.getElementById("mySidebar");
+			var okrContainer = document.querySelector(".okr-container");
+
+			if (sidebar.style.width === "250px") {
+				sidebar.style.width = "0";
+				okrContainer.style.marginLeft = "20px";
+
+			} else {
+				sidebar.style.width = "250px";
+				okrContainer.style.marginLeft = "260px";
+			}
+		}
+		function openNav() {
+			document.getElementById("mySidebar").style.width = "230px";
+			document.getElementById("main").style.marginLeft = "230px";
+		}
+
+		function closeNav() {
+			var sidebar = document.getElementById("mySidebar");
+			var okrContainer = document.querySelector(".okr-container");
+			var mainContent = document.getElementById("main");
+
+			if (sidebar.style.width === "250px") {
+				sidebar.style.width = "0px";
+				okrContainer.style.marginLeft = "10px";
+				mainContent.style.marginLeft = "10px";
+			}
+
+		}
+
+		document.addEventListener('DOMContentLoaded', function () {
+
+			var profileIcon = document.getElementById('profileIcon');
+			var profileDropdown = document.getElementById('profileDropdown');
+
+			// Add click event listener to the profile icon
+			profileIcon.addEventListener('click', function (event) {
+				// Toggle the display of the dropdown menu
+				if (profileDropdown.style.display === 'block') {
+					profileDropdown.style.display = 'none';
+				} else {
+					profileDropdown.style.display = 'block';
+				}
+			});
+
+			// Close the dropdown when clicking outside of it
+			window.onclick = function (event) {
+				if (event.target !== profileIcon && event.target !== profileDropdown) {
+					profileDropdown.style.display = 'none';
+				}
+			};
+
+
+			var menteeLinks = document.querySelectorAll('.mentee-link');
+			menteeLinks.forEach(function (link) {
+				link.addEventListener('click', function (event) {
+					event.preventDefault();
+					var mentorProfile = document.getElementById("mentorProfile");
+					if (mentorProfile.style.display === 'block') {
+						mentorProfile.style.display = 'none';
+					}
+					var firstName = this.getAttribute('data-firstname');
+					var lastName = this.getAttribute('data-lastname');
+					var email = this.getAttribute('data-email');
+					var designation = this.getAttribute('data-designation');
+					var averageRating = this.getAttribute('data-averageRating');
+					showOtherMenteeProfile(firstName, lastName, email, designation, averageRating);
+				});
+			});
+			var mentorLinks = document.querySelectorAll('.mentor-link');
+			mentorLinks.forEach(function (link) {
+				link.addEventListener('click', function (event) {
+					event.preventDefault();
+					var otherMenteeProfile = document.getElementById("otherMenteeProfile");
+					if (otherMenteeProfile.style.display === 'block') {
+						otherMenteeProfile.style.display = 'none';
+					}
+					showMentorProfile();
+				});
+			});
+		});
+
+		function showOtherMenteeProfile(firstName, lastName, email, designation, averageRating) {
+
+			console.log("Name: " + firstName + ' ' + lastName);
+			console.log("Email: " + email);
+			console.log("Designation: " + designation);
+			console.log("Rating: " + averageRating);
+
+			var otherMenteeProfile = document.getElementById("otherMenteeProfile");
+			var otherMenteeProfilePic = document.getElementById("otherMenteeProfilePic");
+			var otherMenteeName = document.getElementById("otherMenteeName");
+			var otherMenteeEmail = document.getElementById("otherMenteeEmail");
+			var otherMenteeDesignation = document.getElementById("otherMenteeDesignation");
+			var otherMenteeAverageRating = document.getElementById("otherMenteeAverageRating");
+
+			// Set profile information
+			otherMenteeName.innerText = firstName + ' ' + lastName;
+			otherMenteeEmail.innerText = email;
+			otherMenteeDesignation.innerText = designation;
+			otherMenteeAverageRating.innerText = "Rating: " + averageRating;
+			otherMenteeProfilePic.innerText = firstName.charAt(0);
+
+			// Display the profile
+			otherMenteeProfile.style.display = "block";
+		}
+
+		function closeOtherMenteeProfile() {
+			var otherMenteeProfile = document.getElementById("otherMenteeProfile");
+			otherMenteeProfile.style.display = "none";
+		}
+
+		function showMentorProfile() {
+			mentorProfile.style.display = "block";
+		}
+
+		function closeMentorProfile() {
+			var mentorProfile = document.getElementById("mentorProfile");
+			mentorProfile.style.display = "none";
+		}
+
+
+		function confirmLogout() {
+			document.getElementById('confirmationDialog').style.display = 'block';
+			document.getElementById('blurBackgroundLogout').style.display = 'block';
+		}
+
+		function logoutConfirmed() {
+			window.location.href = '/logout';
+		}
+
+		function cancelLogout() {
+			document.getElementById('confirmationDialog').style.display = 'none';
+			document.getElementById('blurBackgroundLogout').style.display = 'none';
+		}
+
+
+	</script>
+
+
+</body>
+
+</html>
