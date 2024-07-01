@@ -1,0 +1,53 @@
+name: Deploy to EKS
+
+on:
+  push:
+    branches:
+      - main  # Adjust branch as needed
+  workflow_dispatch:
+    inputs:
+      confirmation:
+        description: 'Do you want to deploy?'
+        required: true
+        default: 'no'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: github.event.inputs.confirmation == 'yes'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Configure kubectl
+        run: |
+          aws eks --region ${{ secrets.AWS_REGION }} update-kubeconfig --name ${{ secrets.EKS_CLUSTER_NAME }}
+
+      - name: Update MySQL Persistent Volume and Claim
+        run: |
+          kubectl apply -f mysql-pv.yaml
+          kubectl apply -f mysql-pvc.yaml
+
+      - name: Update MySQL Deployment
+        run: |
+          kubectl apply -f mysql-deployment.yaml
+
+      - name: Update Web Application Persistent Volume and Claim
+        run: |
+          kubectl apply -f webapp-pv.yaml
+          kubectl apply -f webapp-pvc.yaml
+
+      - name: Update Web Application Deployment
+        env:
+          ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+          IMAGE_TAG: latest  # Update this to your desired image tag
+        run: |
+          kubectl apply -f webapp-deployment.yaml
