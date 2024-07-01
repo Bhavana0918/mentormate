@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+	<!-- Meta tags for character set, compatibility, and viewport -->
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<!-- Title and stylesheet link -->
+	<title>Registration</title>
+	<link rel="stylesheet" th:href="@{../css/registration.css}">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+	<link rel="icon" type="image/png" th:href="@{../css/mmLogo.png}" />
+
+
+	<script th:inline="javascript">
+		// to enable/disable the button based on form validity -->
+
+		function updateSubmitButton() {
+
+			// Check form validity and enable/disable the submit button
+			var formValid = document.getElementById('registrationForm').checkValidity();
+			document.getElementById('submitButton').disabled = !formValid;
+		}
+
+		function disableSubmitButton() {
+			document.getElementById('submitButton').disabled = true;
+		}
+
+		function validatePasswordRequirements() {
+			var password = document.getElementById('password').value;
+			var passwordRequirements = document.getElementById('passwordRequirements');
+			var submitButton = document.getElementById('submitButton');
+
+			// Clear both error messages
+			passwordRequirements.innerHTML = "";
+
+			// Check password requirements
+			var isValidPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/.test(password);
+
+			// Display error message if password format is invalid
+			if (!isValidPassword) {
+				passwordRequirements.innerHTML += "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character. Minimum eight characters.";
+				submitButton.disabled = true;
+			} else {
+				// Check if all required fields are filled before enabling the button
+				var formValid = document.getElementById('registrationForm').checkValidity();
+				submitButton.disabled = !formValid;
+			}
+		}
+
+		function validatePasswordMatch() {
+			var password = document.getElementById('password').value;
+			var confirmPassword = document.getElementById('confirmPassword').value;
+			var passwordRequirements = document.getElementById('passwordRequirements');
+			var submitButton = document.getElementById('submitButton');
+
+			// Clear both error messages
+			passwordRequirements.innerHTML = "";
+
+			// Check if passwords match
+			if (password != confirmPassword) {
+				document.getElementById('confirmPassword').value = "";
+				passwordRequirements.innerHTML = "<br>Passwords do not match.";
+				submitButton.disabled = true;
+			} else {
+				passwordRequirements.innerHTML = "";
+				// Check if all required fields are filled before enabling the button
+				var formValid = document.getElementById('registrationForm').checkValidity();
+				submitButton.disabled = !formValid;
+			}
+		}
+
+		function validateEmail() {
+			var emailField = document.getElementById('email');
+			var emailValidationMessage = document.getElementById('emailValidationMessage');
+			var submitButton = document.getElementById('submitButton');
+
+			// Clear the validation message
+			emailValidationMessage.innerHTML = "";
+
+			// Check email format
+			var isValidEmail = /^[^@]+@[^@]+\.[^.]+$/.test(emailField.value);
+
+			// Display validation message
+			if (!isValidEmail) {
+				emailValidationMessage.innerHTML = "Enter a valid email address (e.g., user@example.com)";
+				submitButton.disabled = true; // Disable the button only if the email is invalid
+			} else {
+				emailValidationMessage.innerHTML = ""; // Clear the message if the email is valid
+			}
+		}
+
+		function togglePassword(fieldId) {
+			var passwordField = document.getElementById(fieldId);
+			var icon = document.getElementById('toggle' + fieldId.charAt(0).toUpperCase() + fieldId.slice(1) + 'Icon');
+
+			if (passwordField.type === 'password') {
+				passwordField.type = 'text';
+				icon.classList.remove('far', 'fa-eye');
+				icon.classList.add('far', 'fa-eye-slash');
+			} else {
+				passwordField.type = 'password';
+				icon.classList.remove('far', 'fa-eye-slash');
+				icon.classList.add('far', 'fa-eye');
+			}
+		}
+
+		setTimeout(function () {
+			var errorMessage = document.getElementById('errorMessage');
+			if (errorMessage) {
+				errorMessage.style.display = 'none';
+			}
+		}, 5000); // 5 seconds in milliseconds
+
+		// Function to hide success message after a timeout
+		function hideSuccessMessage() {
+			var successMessage = document.getElementById('successMessage');
+			if (successMessage) {
+				successMessage.style.display = 'none';
+			}
+		}
+
+		// Hide success message after 5 seconds
+		setTimeout(function () {
+			hideSuccessMessage();
+		}, 5000); // 5 seconds in milliseconds
+
+
+	</script>
+
+</head>
+
+<body>
+	<div class="registration">
+		<div class="form-box">
+			<div class="button-box">
+
+				<h2> Sign up</h2>
+			</div>
+			<div class="message" th:if="${message != null}" id="successMessage">
+				[[${message}]]
+			</div>
+			<!-- Display error message if present -->
+			<div th:if="${error}" class="alert alert-danger" role="alert" id="errorMessage">
+				<p th:text="${error}"></p>
+			</div>
+
+			<div id="passwordRequirements" class="password-requirements"></div>
+			<div id="emailValidationMessage" class="validation-message"></div>
+
+			<!-- Registration form -->
+			<form id="registrationForm" method="post" th:action="@{/registration}" th:object="${user}"
+				class="input-group" oninput="updateSubmitButton()" onsubmit="disableSubmitButton()">
+				<!-- Input fields for user information -->
+				<input type="text" class="input-field" id="firstName" name="firstName" placeholder="FirstName*"
+					required>
+				<input type="text" class="input-field" id="lastName" name="lastName" placeholder="LastName*"
+					th:required="required">
+				<input type="email" class="input-field" id="email" name="email" placeholder="Email*"
+					pattern="^[^@]+@[^@]+\.[^.]+$" title="Enter a valid email address(e.g., user@example.com)"
+					th:required="required" onblur="validateEmail()">
+				<div class="input-group">
+					<input type="password" class="input-field" id="password" name="password" placeholder="Password*"
+						pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$"
+						title="Minimum eight characters, at least one uppercase letter, one lowercase letter, one number, and one special character"
+						th:required="required" onblur="validatePasswordRequirements()">
+					<span class="password-toggle" onclick="togglePassword('password')">
+						<i class="far fa-eye" id="togglePasswordIcon"></i>
+					</span>
+				</div>
+				<div class="input-group">
+					<input type="password" class="input-field" id="confirmPassword" name="confirmPassword"
+						placeholder="Confirm Password*" th:required="required" onchange="validatePasswordMatch()">
+					<span class="password-toggle" onclick="togglePassword('confirmPassword')">
+						<i class="far fa-eye" id="toggleConfirmPasswordIcon"></i>
+					</span>
+				</div>
+				<input type="text" class="input-field" id="designation" name="designation"
+					placeholder="Enter your Designation">
+				<!-- Dropdown for selecting user role -->
+				<select class="select-field" id="roles" name="roles" th:required="required">
+					<option value="">Select your role*</option>
+					<option value="MENTOR">MENTOR</option>
+					<option value="MENTEE">MENTEE</option>
+				</select>
+				<!-- Submit button -->
+				<button id="submitButton" type="submit" disabled>Sign up</button>
+
+
+				<!-- Link to login page -->
+				<p>Already have an account? <a th:href="@{/login}">Log in</a></p>
+			</form>
+		</div>
+	</div>
+
+</body>
+
+</html>

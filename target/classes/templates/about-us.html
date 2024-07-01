@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>About Us - Mentor Mate</title>
+	<link rel="stylesheet" th:href="@{../css/home.css}" />
+	<link rel="icon" type="image/png" th:href="@{../css/mmLogo.png}"/>
+	<style>
+		.about-us {
+			background-color: rgb(211 222 213);
+			padding: 110px;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			height: 75vh;
+		}
+
+		.about-us a {
+			text-decoration: none;
+		}
+
+	</style>
+</head>
+
+<body>
+	<!-- Navigation Bar -->
+	<nav>
+		<ul>
+			<!-- Adding logo image here -->
+			<a class="navbar-title" href="/home"><img src="../css/image-logo.png" alt="Logo"
+					style="height: 34px; border-radius: 35px;align-items: center;"></a>
+			<a class="navbar-title" href="/home"> <span class="first-letter1">M</span>ENTOR <span
+					class="first-letter2">M</span>ATE</a>
+			<li><strong>
+					<a th:href="@{/home}" class="active">Home</a>
+				</strong></li>
+		</ul>
+	</nav>
+	<!-- About Us Section -->
+	<div class="mainContent">
+		<section class="about-us">
+			<h2>About Us</h2>
+			<p>Welcome to Mentor Mate, where mentors and mentees connect to share knowledge and experiences.</p>
+			<p>Our mission is to foster a community of learning and growth through mentorship.</p></br>
+			<h2>Our Mission</h2>
+			<p>At Mentor Mate, our mission is to cultivate a vibrant and supportive community centered around the
+				transformative power of mentorship.</p>
+			<p>We believe in the profound impact of one person guiding another, sharing insights, and navigating the
+				journey
+				of life and career development together.</p>
+		</section>
+		<!-- Footer -->
+		<footer class="footer">
+			<p> 2024 MentorMate </p>
+		</footer>
+	</div>
+</body>
+
+</html>

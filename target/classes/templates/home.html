@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Mentor Mate - Home</title>
+	<link rel="stylesheet" th:href="@{../css/home.css}" />
+	<link rel="icon" type="image/png" th:href="@{../css/mmLogo.png}"/>
+
+</head>
+
+<body>
+	<!-- Navigation Bar -->
+	
+<nav>
+		<ul>
+			<!-- Adding logo image here -->
+			<a class="navbar-title" href="/home"><img src="../css/image-logo.png" alt="Logo"
+					style="height: 34px; border-radius: 35px;align-items: center;"></a>
+			<a class="navbar-title" href="/home"> <span class="first-letter1">M</span>ENTOR <span
+					class="first-letter2">M</span>ATE</a>
+			<li><strong>
+					<a th:href="@{/login}">Login/Register</a>
+				</strong></li>
+			<li><strong>
+					<a th:href="@{/about-us}">About Us</a>
+				</strong></li>
+		</ul>
+	</nav>
+
+
+
+<div class="mainContent">
+	<section class="home">
+		<strong>
+			<h1>Welcome to Mentor Mate</h1>
+		</strong>
+		<strong>
+			<p>Your platform for mentorship and learning.</p>
+		</strong>
+		
+	</section>
+
+	<section class="main-content">
+		<div class="image-container">
+			<img src="../css/image-people.webp " alt="Side Image">
+
+		</div>
+		<div class="information-container">
+			<h1>Mentor Mate</h1>
+			<p>
+				Mentor Mate is a platform where mentors and mentees connect to share knowledge and experiences.
+			</p>
+			<p>
+				Our mission is to foster a community of learning and growth through mentorship. Whether you're looking
+				for guidance as a mentee or you want to contribute as a mentor, Mentor Mate is the place for you.
+			</p>
+		</div>
+	</section>
+
+	<!-- About Us Section -->
+	<section class="about-us">
+		<h2>About Us</h2>
+		<p>Learn more about Mentor Mate and our mission to connect mentors and mentees.</p>
+		<a th:href="@{/about-us}" class="btn">Read More</a>
+	</section>
+
+	<!-- Contact Us Section -->
+	<section class="contact-us">
+		<h2>Contact Us</h2>
+		<p>Have questions or feedback? Contact our support team.</p>
+		<a th:href="@{/contact-us}" class="btn">Contact Us</a>
+	</section>
+	<!-- Footer -->
+	<footer class="footer">
+		<p> 2024 MentorMate </p>
+	</footer>
+</div>
+	
+</body>
+
+</html>

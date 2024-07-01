@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+	<link rel="stylesheet" th:href="@{/css/admin-stylesheet.css}" />
+	<link rel="icon" type="image/png" th:href="@{../css/mmLogo.png}" />
+	<meta charset="ISO-8859-1">
+	<title>Admin</title>
+</head>
+
+<body>
+	<div class="header">
+
+		<div class="left-section">
+			<h5>Admin Dashboard</h5>
+			<p>
+				Welcome, <span th:text="${firstName}" +' '+th:text="${lastName}"></span>!
+			</p>
+		</div>
+		<div class="right-section">
+			<a onclick="confirmLogout()" class="active logout">Logout</a>
+		</div>
+	</div>
+	<div class="error-container">
+		<div th:if="${session.errorMessage}" id="errorMessageContainer"
+			class="error-message" th:text="${session.errorMessage}"></div>
+		<div th:if="${session.successMessage}" id="successMessageContainer"
+         class="success-message" th:text="${session.successMessage}"></div>
+	</div>
+	<main class="table-body">
+		<div>
+			<div class="table-name">
+				<h3>Mentor Mentee Mapping</h3>
+				<!-- ADD User Mapping Button -->
+				<button id="addUserMappingBtn" class="user-mapping-btn"
+					onclick="openUserMappingPopup()">ADD</button>
+			</div>
+			<table aria-label="mapping">
+				<thead>
+					<tr>
+						<th class="serialNo">Sl.No.</th>
+						<th class="columnHeader">Mentor</th>
+						<th class="columnHeader">Mentee</th>
+					</tr>
+				</thead>
+				<tbody>
+					<!-- Iteration to generate rows based on mentorMappings -->
+					<tr th:each="mapping, iterStat : ${mentorMenteeMappings}">
+						<td th:text="${iterStat.index + 1}">1</td>
+						<td><div class="textAlign">
+								<h5 th:text="${mapping.mentorName}"></h5>
+								<p th:text="${mapping.mentor.designation}"></p>
+							</div></td>
+						<td><div class="textAlign">
+								<h5 th:text="${mapping.menteeName}"></h5>
+								<p th:text="${mapping.mentee.designation}"></p>
+							</div></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</main>
+
+	<div class="userMappingCard">
+		<div class="user-mapping-container">
+			<div id="objectivesContainer"></div>
+			<div>
+				<!-- ADD User Mapping Popup -->
+				<div id="userMappingModal" class="user-mapping-modal"
+					style="display: none;">
+					<div class="user-mapping-popup">
+						<button id="userMappingModalCloseBtn"
+							class="close btn btn-sm btn-light">&times;</button>
+						<form th:action="@{/saveMapping}" method="post"
+							onsubmit="disableSubmitButton()">
+							<h4>Mentor Mentee Mapping</h4>
+							<select id="mentorDropdown">
+								<option value="" disabled selected>Select Mentor</option>
+								<option th:each="user : ${mentorData}" th:name="mentor"
+									th:value="${user.id}"
+									th:text="${user.firstName + ' ' + user.lastName + ' - ' + user.designation}">
+								</option>
+							</select> <input type="hidden" name="mentor" value=""> </br> <select
+								id="menteeDropdown">
+								<option value="" disabled selected>Select Mentee</option>
+								<option th:each="user : ${menteeData}" th:name="mentee"
+									th:value="${user.id}"
+									th:text="${user.firstName + ' ' + user.lastName + ' - ' + user.designation}">
+								</option>
+							</select> <input type="hidden" name="mentee" value=""> <br>
+							<button id="saveButton" type="submit" class="btn btn-success"
+								disabled="disabled">Save</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+	
+	<div id="confirmationDialog">
+		    <p>Are you sure you want to logout?</p>
+		    <button class="yes" onclick="logoutConfirmed()">Yes</button>
+		    <button class="cancel" onclick="cancelLogout()">No</button>
+    </div>
+    <div id="blurBackgroundLogout" class="blur-background" style="display: none;"></div>
+	
+	
+
+	<div id="blurBackgroundUserMapping" class="blur-background"
+		style="display: none;"></div>
+
+	<footer class="footer">
+		<p>2024 MentorMate</p>
+	</footer>
+
+	<script th:inline="javascript">
+
+		const mentorDropdown = document.getElementById("mentorDropdown");
+		const menteeDropdown = document.getElementById("menteeDropdown");
+		const saveButton = document.getElementById("saveButton");
+		const errorMessage = document.getElementById("errorMessage");
+
+		// Initial setup to disable the save button
+		document.addEventListener("DOMContentLoaded", function () {
+			saveButton.disabled = true;
+		});
+
+		// Add click event listener to the close button (cross mark)
+		document.getElementById('userMappingModalCloseBtn').addEventListener('click', closeUserMappingPopup); 
+		
+		// Function to open the ADD User Mapping popup
+		 function openUserMappingPopup() {
+			mentorDropdown.addEventListener("change", validateDropdowns);
+			menteeDropdown.addEventListener("change", validateDropdowns);
+			document.getElementById('userMappingModal').style.display = 'block';
+			document.getElementById('blurBackgroundUserMapping').style.display = 'block'; 
+			
+			// Add event listener to close the popup when clicking outside
+		    window.addEventListener('click', function (event) {
+				if(event.target === document.getElementById('blurBackgroundUserMapping')) {
+						closeUserMappingPopup();
+						}
+					}); 
+					
+			// Validate dropdowns when opening the popup 
+			validateDropdowns(); 
+		} 
+		
+		// Function to close the ADD User Mapping 
+	      function closeUserMappingPopup() {
+			document.getElementById('userMappingModal').style.display = 'none';
+			document.getElementById('blurBackgroundUserMapping').style.display = 'none';
+			}
+			
+		  function validateDropdowns() {
+			const mentorValue = mentorDropdown.value;
+			const menteeValue = menteeDropdown.value; 
+			
+			if (mentorValue === menteeValue || mentorValue === "" || menteeValue === "") {
+				saveButton.disabled = true;
+			} else {saveButton.disabled = false;
+				}
+		 }
+			               
+			               
+	 document.querySelectorAll('select').forEach(select => {
+		   select.addEventListener('change', () => {
+		   const hiddenInput = select.nextElementSibling;
+		   hiddenInput.value = select.value;
+				});
+			});
+			
+			document.addEventListener("DOMContentLoaded", 
+			function () {
+				const errorMessageContainer = document.getElementById("errorMessageContainer");
+
+				if (errorMessageContainer) {
+					errorMessageContainer.style.display = "block";
+
+					setTimeout(() => {
+						errorMessageContainer.style.display = "none";
+					}, 5000);
+				}
+			});
+
+			function confirmLogout() {
+				document.getElementById('confirmationDialog').style.display = 'block';
+				document.getElementById('blurBackgroundLogout').style.display = 'block';
+			}
+
+		document.querySelectorAll('select').forEach(select => {
+			select.addEventListener('change', () => {
+				const hiddenInput = select.nextElementSibling;
+				hiddenInput.value = select.value;
+			});
+		});
+	// Hide error message after 3 messages
+		document.addEventListener("DOMContentLoaded", function () {
+			const errorMessageContainer = document.getElementById("errorMessageContainer");
+
+			if (errorMessageContainer) {
+				errorMessageContainer.style.display = "block";
+
+				setTimeout(() => {
+					errorMessageContainer.style.display = "none";
+				}, 5000);
+			}
+			
+			if (successMessageContainer) { 
+	            successMessageContainer.style.display = "block";
+	            setTimeout(() => {
+	                successMessageContainer.style.display = "none";
+	            }, 5000); 
+	        }
+		});
+			function logoutConfirmed() {
+				window.location.href = '/logout';
+			}
+
+			function cancelLogout() {
+				document.getElementById('confirmationDialog').style.display = 'none';
+				document.getElementById('blurBackgroundLogout').style.display = 'none';
+			}
+	</script>
+
+</body>
+
+</html>

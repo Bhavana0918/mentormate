@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="ISO-8859-1">
+	<title>Login</title>
+	<link rel="stylesheet" th:href="@{../css/login.css}">
+	<link rel="icon" type="image/png" th:href="@{../css/mmLogo.png}"/>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+
+</head>
+
+<body>
+	
+	<nav>
+		<ul>
+			<!-- Adding logo image here -->
+			<a class="navbar-title" href="/home"><img src="../css/image-logo.png" alt="Logo"
+					style="height: 34px; border-radius: 35px;align-items: center;"></a>
+			<a class="navbar-title" href="/home"> <span class="first-letter1">M</span>ENTOR <span
+					class="first-letter2">M</span>ATE</a>
+			<li><strong>
+					<a th:href="@{/home}" class="active">Home</a>
+				</strong></li>
+		</ul>
+	</nav>
+	<div class="login">
+		<div class="form-box">
+			<div class="button-box">
+				<div id="btn"></div>
+				<h2> Log In</h2>
+			</div>
+			<div class="message" th:if="${param.error}" style="color: red;">
+				Invalid Username or Password
+			</div>
+			
+			<form th:action="@{/login}" method="post" class="input-group">
+				<input type="email" class="input-field" id="username" name="username" placeholder="Email" required>
+				<div class="input-group">
+					<input type="password" class="input-field" id="password" name="password" placeholder="Password"
+						required>
+					<span class="password-toggle" onclick="togglePassword()">
+						<i class="far fa-eye" id="togglePasswordIcon"></i>
+					</span>
+				</div>
+				<div class="inline-elements-container">
+					<a href="/" class="forgot-password-link" th:href="@{/forgotPassword}">Forgot Password</a>
+				</div>
+				<button type="submit" id="myButton" class="submit-btn">Log in</button>
+				<!-- Check if user doesn't have an account -->
+				<p>Don't have an account? <a th:href="@{/registration}"><b>Sign up</b></a></p>
+			</form>
+		</div>
+	</div>
+
+
+	<script th:inline="javascript">
+		function togglePassword() {
+			var passwordField = document.getElementById('password');
+			var icon = document.getElementById('togglePasswordIcon');
+
+			if (passwordField.type === 'password') {
+				passwordField.type = 'text';
+				icon.classList.remove('far', 'fa-eye');
+				icon.classList.add('far', 'fa-eye-slash');
+			} else {
+				passwordField.type = 'password';
+				icon.classList.remove('far', 'fa-eye-slash');
+				icon.classList.add('far', 'fa-eye');
+			}
+		}
+	</script>
+
+</body>
+
+</html>

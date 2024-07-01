@@ -1,0 +1,212 @@
+@charset "ISO-8859-1";
+
+body {
+	margin: 0;
+	padding: 0;
+	font-family: Arial, Helvetica, sans-serif;
+	overflow: hidden;
+
+}
+
+.first-letter1 {
+	color: rgb(255 246 131);
+
+}
+
+.first-letter2 {
+	color: rgb(255 246 131);
+}
+
+/* Styling for hero section */
+.home {
+	box-sizing: border-box;
+	background-image: url('../css/background-final.jpg');
+	background-size: cover;
+	background-repeat: no-repeat;
+	overflow: hidden;
+	font-size: 25px;
+	color: white;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	height: 100vh;
+}
+
+
+
+.image-container {
+	flex: 2;
+}
+
+.information-container {
+	flex: 2;
+	padding: 10px;
+
+}
+
+.image-container img {
+	height: auto;
+	width: 100%;
+	object-fit: cover;
+}
+
+.home h1 {
+	font-size: 2.5em;
+	color: white;
+	text-align: center;
+}
+
+/* Media query for smaller screens */
+@media screen and (max-width: 768px) {
+	nav {
+		display: flex;
+		flex-direction: column;
+		/* Stack navigation links vertically */
+		align-items: center;
+	}
+
+	nav a {
+		margin: 5px 0;
+	}
+}
+
+/* Media query for smaller screens */
+@media screen and (max-width: 768px) {
+	.main-content {
+		flex-direction: column;
+		/* Stack containers vertically */
+		align-items: stretch;
+	}
+
+	.image-container img {
+		height: auto;
+		width: 100%;
+	}
+
+	.information-container {
+		flex: 2;
+		margin-top: 20px;
+		font-size: 16px;
+	}
+}
+
+.mainContent {
+	overflow-y: scroll;
+	height: 93vh;
+	margin-top: 60px;
+}
+
+.main-content {
+	display: flex;
+	justify-content: space-between;
+	background-color: #b39f9f;
+}
+
+.main-content h1 {
+	font-size: 30px;
+	color: rgb(128, 0, 128);
+
+}
+
+.main-content p {
+	font-size: 20px;
+
+}
+
+/* Basic styling for the navigation bar */
+nav {
+	top: 0;
+	position: fixed;
+	width: 100%;
+	background-color: rgb(0, 25, 51);
+	color: #ffffff;
+	height: 50px;
+	padding: 5px;
+	z-index: 5;
+}
+
+nav ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+
+}
+
+nav li {
+	float: right;
+	display: block;
+	padding: 10px;
+	color: #ffffff;
+}
+
+.navbar-title {
+	float: left;
+	display: block;
+	font-size: 33px;
+}
+
+nav a {
+	display: block;
+	text-decoration: none;
+	font-size: 16px;
+	padding: 6px;
+	letter-spacing: 0.5px;
+	color: #ffffff;
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+nav a:hover {
+	color: rgb(255 246 131);
+}
+
+
+/* Additional styling for the title */
+.title {
+	text-align: center;
+}
+
+
+
+
+
+/* Styling for other sections (About Us, Contact Us) */
+.about-us,
+.contact-us {
+	text-align: center;
+	padding: 25px 0;
+	background-color: rgb(211 222 213);
+}
+
+.about-us h2,
+.contact-us h2 {
+	font-size: 22px;
+	color: rgb(128, 0, 128);
+}
+
+.about-us p,
+.contact-us p {
+	color: rgb(0, 0, 0);
+	margin-bottom: 20px;
+	font-size: 20px;
+}
+
+.btn {
+	display: inline-block;
+	padding: 10px 20px;
+	font-size: 1em;
+	text-align: center;
+	text-decoration: none;
+	background-color: rgb(211 117 109);
+	color: white;
+	border-radius: 5px;
+}
+
+/* Footer styling */
+footer {
+	background-color: rgb(0, 25, 51);
+	color: white;
+	text-align: center;
+	padding: 1px 0;
+	width: 100%;
+}
