@@ -1,26 +1,27 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: webapp-deployment
+  name: webapp
 spec:
-  replicas: 2  # Adjust as needed
   selector:
     matchLabels:
       app: webapp
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
         app: webapp
     spec:
       containers:
-        - name: webapp
-          image: 122238031788.dkr.ecr.ap-south-1.amazonaws.com/mentormate:latest
-          ports:
-            - containerPort: 8080
-          volumeMounts:
-            - name: webapp-persistent-storage
-              mountPath: /app/data
-      volumes:
+      - image: 122238031788.dkr.ecr.ap-south-1.amazonaws.com/mentormate:latest
+        name: webapp
+        ports:
+        - containerPort: 8080
+        volumeMounts:
         - name: webapp-persistent-storage
-          persistentVolumeClaim:
-            claimName: webapp-pv-claim
+          mountPath: /app/data
+      volumes:
+      - name: webapp-persistent-storage
+        persistentVolumeClaim:
+          claimName: webapp-pvc
