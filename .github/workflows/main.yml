@@ -48,23 +48,23 @@ jobs:
 
       - name: Update MySQL Persistent Volume and Claim
         run: |
-          kubectl apply -f mysql-pv.yaml
-          kubectl apply -f mysql-pvc.yaml
+          kubectl apply -f mentormate/mysql-pv.yaml
+          kubectl apply -f mentormate/mysql-pvc.yaml
 
       - name: Update MySQL Deployment and Service
         run: |
-          kubectl apply -f mysql-deployment.yaml
-          kubectl apply -f mysql-service.yaml
+          kubectl apply -f mentormate/mysql-deployment.yaml
+          kubectl apply -f mentormate/mysql-service.yaml
 
       - name: Update Web Application Persistent Volume and Claim
         run: |
-          kubectl apply -f webapp-pv.yaml
-          kubectl apply -f webapp-pvc.yaml
+          kubectl apply -f mentormate/webapp-pv.yaml
+          kubectl apply -f mentormate/webapp-pvc.yaml
 
       - name: Update Web Application Deployment and Service
         env:
           ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
           IMAGE_TAG: latest  # Update this to your desired image tag
         run: |
-          kubectl apply -f webapp-deployment.yaml
-          kubectl apply -f webapp-service.yaml
+          kubectl apply -f mentormate/webapp-deployment.yaml
+          kubectl apply -f mentormate/webapp-service.yaml
