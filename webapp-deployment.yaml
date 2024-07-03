@@ -1,27 +1,52 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: webapp
+  name: webapp-server
+  labels:
+    app: webapp-server
 spec:
+  replicas: 1
   selector:
     matchLabels:
-      app: webapp
-  strategy:
-    type: Recreate
+      app: webapp-server
   template:
     metadata:
       labels:
-        app: webapp
+        app: webapp-server
     spec:
       containers:
-      - image: 122238031788.dkr.ecr.ap-south-1.amazonaws.com/mentormate:latest
-        name: webapp
+      - name: webapp-server
+        image: 122238031788.dkr.ecr.ap-south-1.amazonaws.com/mentormate:webapp
         ports:
         - containerPort: 8080
-        volumeMounts:
-        - name: webapp-persistent-storage
-          mountPath: /app/data
-      volumes:
-      - name: webapp-persistent-storage
-        persistentVolumeClaim:
-          claimName: webapp-pvc
+        env:
+        - name: SPRING_DATASOURCE_URL
+          value: jdbc:mysql://mysql-service:3306/mentormate
+        - name: SPRING_DATASOURCE_USERNAME
+          value: admin
+        - name: SPRING_DATASOURCE_PASSWORD
+          value: password
+        - name: SPRING_MAIL_HOST
+          value: smtp.gmail.com
+        - name: SPRING_MAIL_PORT
+          value: "587"
+        - name: SPRING_MAIL_USERNAME
+          value: mentormate.help@gmail.com
+        - name: SPRING_MAIL_PASSWORD
+          value: ntkqaepvkunnhrht
+        - name: SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH
+          value: "true"
+        - name: SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE
+          value: "true"
+        - name: SPRING_FLYWAY_URL
+          value: jdbc:mysql://mysql-service:3306/mentormate?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false
+        - name: SPRING_FLYWAY_USER
+          value: admin
+        - name: SPRING_FLYWAY_PASSWORD
+          value: password
+        - name: SPRING_FLYWAY_LOCATIONS
+          value: classpath:db/migration
+        - name: SPRING_FLYWAY_BASELINE_ON_MIGRATE
+          value: "true"
+
+

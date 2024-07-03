@@ -107,7 +107,7 @@
 			<artifactId>mockito-core</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<!--Database Migration tool
+		<!--Database Migration tool-->
 		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-core</artifactId>
@@ -115,7 +115,7 @@
 		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-mysql</artifactId>
-		</dependency>-->
+		</dependency>
 	</dependencies>
 
 	<build>

@@ -3,35 +3,44 @@ kind: Deployment
 metadata:
   name: mysql
 spec:
+  replicas: 1
   selector:
     matchLabels:
       app: mysql
-  strategy:
-    type: Recreate
   template:
     metadata:
       labels:
         app: mysql
     spec:
       containers:
-      - image: 122238031788.dkr.ecr.ap-south-1.amazonaws.com/mysql:8.1
-        name: mysql
-        env:
-        - name: MYSQL_DATABASE
-          value: "mentormate"
-        - name: MYSQL_USER
-          value: "admin"
-        - name: MYSQL_PASSWORD
-          value: "password"
-        - name: MYSQL_ROOT_PASSWORD
-          value: "password"
-        ports:
-        - containerPort: 3306
-          name: mysql
-        volumeMounts:
-        - name: mysql-persistent-storage
-          mountPath: /var/lib/mysql
+        - name: mysql
+          image: 122238031788.dkr.ecr.ap-south-1.amazonaws.com/mentormate:mysql
+          ports:
+            - containerPort: 3306
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: "password"
+            - name: MYSQL_DATABASE
+              value: "mentormate"
+            - name: MYSQL_USER
+              value: "admin"
+            - name: MYSQL_PASSWORD
+              value: "password"
+          volumeMounts:
+            - name: mysql-persistent-storage
+              mountPath: /var/lib/mysql
+          readinessProbe:
+            exec:
+              command:
+                - mysqladmin
+                - ping
+                - -h
+                - localhost
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 5
       volumes:
-      - name: mysql-persistent-storage
-        persistentVolumeClaim:
-          claimName: mysql-pvc
+        - name: mysql-persistent-storage
+          persistentVolumeClaim:
+            claimName: mysql-pv-claim
