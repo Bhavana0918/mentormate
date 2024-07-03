@@ -31,7 +31,7 @@ jobs:
         run: |
           curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
           sudo mv /tmp/eksctl /usr/local/bin
- 
+
       - name: Create EKS Cluster
         run: |
           eksctl create cluster --name ${{ secrets.EKS_CLUSTER_NAME }} --region ${{ secrets.AWS_REGION }} --nodegroup-name linux-nodes --node-type t2.micro --nodes 2 --nodes-min 1 --nodes-max 3 --managed
@@ -39,7 +39,7 @@ jobs:
       - name: Configure kubectl
         run: |
           aws eks --region ${{ secrets.AWS_REGION }} update-kubeconfig --name ${{ secrets.EKS_CLUSTER_NAME }}
-          
+
       - name: Install kubectl
         run: |
           curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
@@ -48,23 +48,23 @@ jobs:
 
       - name: Update MySQL Persistent Volume and Claim
         run: |
-          kubectl apply -f mentormate/mysql-pv.yaml
-          kubectl apply -f mentormate/mysql-pvc.yaml
+          kubectl apply -f mysql-pv.yaml
+          kubectl apply -f mysql-pvc.yaml
 
       - name: Update MySQL Deployment and Service
         run: |
-          kubectl apply -f mentormate/mysql-deployment.yaml
-          kubectl apply -f mentormate/mysql-service.yaml
+          kubectl apply -f mysql-deployment.yaml
+          kubectl apply -f mysql-service.yaml
 
       - name: Update Web Application Persistent Volume and Claim
         run: |
-          kubectl apply -f mentormate/webapp-pv.yaml
-          kubectl apply -f mentormate/webapp-pvc.yaml
+          kubectl apply -f webapp-pv.yaml
+          kubectl apply -f webapp-pvc.yaml
 
       - name: Update Web Application Deployment and Service
         env:
           ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
           IMAGE_TAG: latest  # Update this to your desired image tag
         run: |
-          kubectl apply -f mentormate/webapp-deployment.yaml
-          kubectl apply -f mentormate/webapp-service.yaml
+          kubectl apply -f webapp-deployment.yaml
+          kubectl apply -f webapp-service.yaml
