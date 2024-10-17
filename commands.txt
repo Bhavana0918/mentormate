@@ -1,0 +1,288 @@
+Resources Created by the Command: aws eks update-nodegroup-config --cluster-name mentormatecluster --nodegroup-name linux-nodes --scaling-config minSize=2,maxSize=5,desiredSize=3
+Amazon EKS Cluster:
+
+Control Plane (Managed by AWS): AWS EKS creates and manages the control plane, which includes the master nodes responsible for:
+API Server: Manages communication with Kubernetes resources.
+etcd: Stores all Kubernetes cluster data.
+Scheduler: Assigns resources to nodes.
+Controller Manager: Manages different controllers such as node controller, replication controller, etc.
+Use case: Manages the entire lifecycle of the Kubernetes cluster, including API access and configuration.
+VPC (Virtual Private Cloud):
+
+Subnets: It creates subnets in multiple Availability Zones (AZs) to ensure high availability.
+Route Tables: Manages traffic between subnets and the internet.
+Internet Gateway: Enables public access to the worker nodes or external services.
+Use case: Provides network isolation and ensures high availability of the cluster by distributing resources across different AZs.
+Worker Nodes (EC2 Instances):
+
+EC2 Instances: The --nodegroup-name refers to the worker nodes, which are EC2 instances that run the Kubernetes workloads (pods/containers).
+Auto Scaling Group: Manages the scaling of EC2 instances based on the --nodes-min and --nodes-max values.
+IAM Roles: The worker nodes are assigned IAM roles that allow them to interact with AWS services like S3, CloudWatch, etc.
+Use case: These nodes run your applications, manage their lifecycle (start, stop, restart containers), and ensure scalability.
+Security Groups:
+
+Security groups control the network traffic to and from the EC2 instances (worker nodes).
+Use case: Ensures secure access to and from the Kubernetes nodes, enabling proper communication between components.
+Node Group:
+
+The --nodegroup-name (e.g., worker-nodes) creates a group of EC2 instances, all of which share the same configuration (node type, scaling policies, etc.).
+Use case: A node group can represent different tiers of your application (e.g., frontend vs backend nodes), ensuring specific workloads run on the right nodes.
+IAM Roles and Policies:
+
+IAM Role for EKS Control Plane: Grants permissions to the EKS control plane to interact with other AWS services.
+IAM Role for Worker Nodes: Allows worker nodes to interact with AWS services like CloudWatch for logging, S3 for storage, etc.
+Use case: Ensures proper access controls for the control plane and worker nodes, allowing them to interact with AWS resources securely.
+CloudFormation Stacks:
+
+AWS uses CloudFormation to provision and manage all the resources mentioned above.
+Use case: Provides a clear and repeatable infrastructure-as-code approach to managing the cluster.
+
+
+
+Kubelet Overview
+Purpose:The kubelet is an agent running on each worker node, responsible for managing the lifecycle of containers. It ensures that the containers in a pod are running and healthy, restarting them if they fail.
+
+Functionality:
+Reads pod specifications from the Kubernetes API server.
+Monitors the health of pods and containers.
+Interacts with container runtimes (e.g., Docker, containerd).
+Reports the status of the node and pods to the control plane.
+
+Location:Runs on every node in the Kubernetes cluster, including master and worker nodes, managing container states.
+
+
+Kube-proxy Overview
+Purpose:The kube-proxy maintains network rules on worker nodes, enabling communication between services and pods within the Kubernetes cluster.
+
+Functionality:
+Maintains network connectivity between services and their corresponding pods.
+Implements load balancing for service traffic.
+Configures network rules using iptables, IPVS, or similar methods.
+Manages internal and external traffic routing.
+
+Location:Runs on every worker node in the cluster, focusing on network configuration for services and pods.
+
+
+Namespace:
+1. kube-node-lease
+Purpose: Efficient node health tracking
+Description: The kube-node-lease namespace contains Lease objects, which are periodically updated by each node to signal their health and availability. These Lease objects enable more efficient node heartbeats and improve the performance of node status updates, especially in larger clusters.
+2. kube-public
+Purpose: Stores publicly accessible information
+Description: The kube-public namespace is used for resources that should be readable by all users, including unauthenticated users. This namespace typically includes a ConfigMap named cluster-info, which contains cluster-wide information, such as how to connect to the cluster’s API server. All resources within this namespace are publicly accessible.
+3. kube-system
+Purpose: Contains core system components of Kubernetes
+Description: The kube-system namespace houses the Kubernetes control plane components and system-level add-ons that are critical for cluster functionality. This includes essential services like the API server, DNS (CoreDNS), kube-proxy, and additional system utilities. Administrators often use this namespace to monitor and manage the cluster’s core infrastructure and to troubleshoot system-level issues.
+
+Types of Storage Classes
+1.Standard (default)
+Kind: PersistentVolume
+Description: The default storage class for dynamic provisioning in many Kubernetes distributions. It typically maps to cloud provider-specific storage solutions (e.g., AWS EBS, Google Cloud Persistent Disk).
+
+2.GP2/GP3 (AWS)
+Kind: PersistentVolume
+Description: These are specific to Amazon Web Services and provide general-purpose SSD storage. GP3 offers improved performance and cost efficiency compared to GP2.
+
+3.IO1/IO2 (AWS)
+Kind: PersistentVolume
+Description: Provisioned IOPS SSD storage types that provide high performance and durability, suitable for I/O-intensive applications.
+
+4.Azure Disk
+Kind: PersistentVolume
+Description: Storage classes for Azure Kubernetes Service (AKS) that leverage Azure Managed Disks, offering both standard HDD and SSD options.
+
+5.GCE PD (Google Cloud)
+Kind: PersistentVolume
+Description: Google Cloud Platform’s Persistent Disks that can be used as storage for Kubernetes workloads.
+
+6.NFS (Network File System)
+Kind: PersistentVolume
+Description: Allows for persistent storage using a Network File System, enabling shared access among multiple pods.
+
+7.Ceph RBD (RADOS Block Device)
+Kind: PersistentVolume
+Description: A type of storage that utilizes Ceph, an open-source distributed storage system, allowing for block storage.
+
+8.GlusterFS
+Kind: PersistentVolume
+Description: A scalable network filesystem that provides shared storage, suitable for applications that require data replication.
+
+9.Local
+Kind: PersistentVolume
+Description: Refers to storage directly attached to a node. It's useful for high-performance applications but lacks the portability and resilience of cloud-based solutions.
+
+10.CSI (Container Storage Interface)
+Kind: PersistentVolume
+Description: Allows developers to use external storage solutions by implementing the CSI specification, enabling a variety of storage backends to be used as persistent volumes.
+
+
+1.The Dynatrace Operator is a core component that manages the deployment, configuration, and lifecycle of Dynatrace's monitoring stack within a Kubernetes cluster.
+2.he Dynatrace Webhook component is used for managing communication between Kubernetes events and the Dynatrace platform.
+3.CSI (Container Storage Interface) Driver is a dynamic agent installation mechanism used to manage the installation and lifecycle of the Dynatrace OneAgent on Kubernetes nodes. Specifically, the OneAgent CSI Driver helps mount the OneAgent to pods via persistent storage.
+
+1. Kubernetes Cluster Management
+# View Cluster Information:
+ kubectl cluster-info
+
+# View Nodes in the Cluster:
+ kubectl get nodes
+
+# Describe a Node:
+ kubectl describe node <node-name>
+
+# Check Cluster Version:
+ kubectl version
+
+2. Namespace Management
+# List All Namespaces:
+ kubectl get namespaces
+
+# Create a New Namespace:
+ kubectl create namespace <namespace-name>
+
+# Switch Namespace:
+ kubectl config set-context --current --namespace=<namespace-name>
+
+# Delete a Namespace:
+ kubectl delete namespace <namespace-name>
+
+ 3. Pod Management
+# List All Pods:
+ kubectl get pods
+
+# List Pods in a Specific Namespace:
+ kubectl get pods -n <namespace-name>
+
+# Get Detailed Information of a Pod:
+ kubectl describe pod <pod-name>
+
+# Get Logs from a Pod:
+ kubectl logs <pod-name>
+
+# Get Logs from a Pod with Multiple Containers:
+ kubectl logs <pod-name> -c <container-name>
+
+# Create a Pod from a YAML File:
+ kubectl apply -f <file.yaml>
+
+# Delete a Pod:
+ kubectl delete pod <pod-name>
+
+# Execute a Command Inside a Pod:
+# kubectl exec -it <pod-name> -- <command>
+
+# Port Forward a Local Port to a Pod:
+# kubectl port-forward <pod-name> <local-port>:<pod-port>
+
+4. Service Management
+# List All Services:
+# kubectl get services
+
+# Describe a Service:
+# kubectl describe service <service-name>
+
+# Expose a Pod as a Service:
+# kubectl expose pod <pod-name> --type=<type> --port=<port>
+
+# Delete a Service:
+# kubectl delete service <service-name>
+
+5. Deployment Management
+# List All Deployments:
+# kubectl get deployments
+
+# Describe a Deployment:
+# kubectl describe deployment <deployment-name>
+
+# Create a Deployment:
+# kubectl create deployment <deployment-name> --image=<image-name>
+
+# Scale a Deployment:
+# kubectl scale deployment <deployment-name> --replicas=<number>
+
+# Update a Deployment Image:
+# kubectl set image deployment/<deployment-name> <container-name>=<image-name>
+
+# Delete a Deployment:
+# kubectl delete deployment <deployment-name>
+
+6. ConfigMap and Secret Management
+# List All ConfigMaps:
+# kubectl get configmaps
+
+# Describe a ConfigMap:
+# kubectl describe configmap <configmap-name>
+
+# Create a ConfigMap from a File:
+# kubectl create configmap <configmap-name> --from-file=<file-path>
+
+# Delete a ConfigMap:
+# kubectl delete configmap <configmap-name>
+
+# List All Secrets:
+# kubectl get secrets
+
+# Describe a Secret:
+# kubectl describe secret <secret-name>
+
+# Create a Secret:
+# kubectl create secret generic <secret-name> --from-literal=<key>=<value>
+
+# Delete a Secret:
+# kubectl delete secret <secret-name>
+
+ 7. Ingress Management
+# List All Ingresses:
+# kubectl get ingress
+
+# Describe an Ingress:
+# kubectl describe ingress <ingress-name>
+
+# Apply an Ingress from a YAML File:
+# kubectl apply -f <ingress-file.yaml>
+
+# Delete an Ingress:
+# kubectl delete ingress <ingress-name>
+
+8. Persistent Volume (PV) and Persistent Volume Claim (PVC) Management
+# List All Persistent Volumes:
+# kubectl get pv
+
+# List All Persistent Volume Claims:
+# kubectl get pvc
+
+# Describe a Persistent Volume Claim:
+# kubectl describe pvc <pvc-name>
+
+# Create a PVC from a YAML File:
+# kubectl apply -f <pvc-file.yaml>
+
+# Delete a PVC:
+# kubectl delete pvc <pvc-name>
+
+9. Monitoring and Troubleshooting
+# Get Resource Usage (CPU/Memory) of Pods:
+# kubectl top pod
+
+# Get Resource Usage of Nodes:
+# kubectl top node
+
+# Check Events:
+# kubectl get events
+
+# Debug a Pod by Creating a Temporary Shell:
+# kubectl run -it --rm --image=<image> -- bash
+
+10. Helm (Package Manager for Kubernetes)
+# List All Installed Helm Charts:
+# helm list
+
+# Install a Helm Chart:
+# helm install <release-name> <chart>
+
+# Upgrade an Existing Release:
+# helm upgrade <release-name> <chart>
+
+# Uninstall a Helm Release:
+# helm uninstall <release-name>
+

@@ -62,7 +62,7 @@ public class AdminDashboardController {
 
 		// Check for existing and reverse mappings early
 		if (mentorMenteeRelationshipService.isMappingOrReverseMappingPresent(selectedMentee, selectedMentor)) {
-			logger.info("Mapping or reverse mapping already exists");
+			logger.info("Mapping already exists");
 			session.setAttribute("errorMessage", "This mentor-mentee mapping or its reverse already exists.");
 			return "redirect:/admin";
 		}
